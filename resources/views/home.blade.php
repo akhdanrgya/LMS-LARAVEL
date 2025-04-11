@@ -1,14 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LMS</title>
-</head>
-<body>
-    <div>
-        WELCOME
-    </div>
-</body>
-</html>
+<x-layout>
+    <h1 class="text-3xl font-bold text-blue-600">Welcome King Akhdan 👑</h1>
+    <p class="mt-2 text-gray-700">Ini slot-nya, bebas lo isi apa aja</p>
+</x-layout>
