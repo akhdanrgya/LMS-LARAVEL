@@ -1,44 +1,77 @@
 @extends('layouts.layout')
 
 @section('content')
-<div class="flex min-h-screen bg-gray-100">
-    {{-- Main Content --}}
-    <div class="flex-1 p-8">
-        {{-- Top bar --}}
-        <div class="flex justify-between items-center mb-8 gap-10">
-            <div class="w-full">
-                <div class="relative">
+    <div class="pl-[198px]">
+        <div class="max-w-screen-xl mx-auto px-6 py-6 flex flex-col gap-8">
+            {{-- Search & Profile --}}
+            <div class="flex justify-between items-center w-full">
+                <div
+                    class="flex items-center gap-4 px-6 py-3 rounded-full bg-white border border-[#4c5a73] w-full max-w-[658px]">
+                    <i class="fa-solid fa-magnifying-glass text-[#4c5a73] text-xl"></i>
                     <input type="text" placeholder="Search your course...."
-                        class="w-full rounded-full px-6 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                    <span class="absolute right-4 top-2.5 text-gray-400">
-                        🔍
-                    </span>
+                        class="bg-transparent outline-none text-[#4c5a73] text-xl w-full" />
+                </div>
+                <div class="flex items-center gap-4">
+                    <i class="fa-regular fa-bell text-[#4c5a73] text-xl"></i>
+                    <span class="text-xl text-[#4c5a73]">{{ Auth::user()->name }}</span>
+                    <i class="fa-solid fa-chevron-down text-[#4c5a73] text-xl"></i>
                 </div>
             </div>
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-full bg-indigo-800"></div>
-                <span class="text-gray-800 font-medium uppercase">{{ Auth::user()->name }}</span>
-            </div>
-        </div>
 
-        {{-- Welcome --}}
-        <h2 class="text-2xl font-semibold mb-4 uppercase">WELCOME BACK {{ Auth::user()->name }} 👋</h2>
-
-        {{-- Announcements --}}
-        <div class="mb-6">
-            <h3 class="font-semibold mb-2">Announcements</h3>
-            <div class="bg-white rounded-xl shadow-md p-6 h-32">
-                {{-- Content goes here --}}
+            {{-- Greeting --}}
+            <div class="flex flex-col justify-center items-start bg-[#d3cfff] w-full p-6 rounded-2xl h-[150px]">
+                <h1 class="text-3xl font-bold text-black">Hi, {{ Auth::user()->name }}</h1>
+                <p class="text-base text-black">Ready to start your day with some lesson?</p>
             </div>
-        </div>
 
-        {{-- Your Lesson --}}
-        <div>
-            <h3 class="font-semibold mb-2">Your Lesson</h3>
-            <div class="bg-white rounded-xl shadow-md p-6 h-32">
-                {{-- Content goes here --}}
+            {{-- Overview --}}
+            <div class="w-full">
+                <h2 class="text-xl font-bold text-[#4c5a73] mb-4">Overview</h2>
+                <div class="flex flex-wrap gap-6">
+                    {{-- Card 1 --}}
+                    <div class="flex gap-6 items-center flex-1 min-w-[280px] bg-[#766bd8] p-6 rounded-md">
+                        <div class="h-20 w-20 flex items-center justify-center rounded-md bg-white/20 text-white text-4xl">
+                            <i class="fa-solid fa-chart-simple"></i>
+                        </div>
+                        <div class="text-white">
+                            <p class="text-xl font-black">8%</p>
+                            <p class="text-xl font-black">Rate</p>
+                        </div>
+                    </div>
+
+                    {{-- Card 2 --}}
+                    <div class="flex gap-6 items-center flex-1 min-w-[280px] bg-[#cea0cd] p-6 rounded-md">
+                        <div class="h-20 w-20 flex items-center justify-center rounded-md bg-white/20 text-white text-4xl">
+                            <i class="fa-solid fa-check-to-slot"></i>
+                        </div>
+                        <div class="text-white">
+                            <p class="text-xl font-black">20%</p>
+                            <p class="text-xl font-black">Complete</p>
+                        </div>
+                    </div>
+                    
+                    {{-- Card 3 --}}
+                    <div class="flex gap-6 items-center flex-1 min-w-[280px] bg-[#9dc2d7] p-6 rounded-md">
+                        <div class="h-20 w-20 flex items-center justify-center rounded-md bg-white/20 text-white text-4xl">
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <div class="text-white">
+                            <p class="text-xl font-black">2</p>
+                            <p class="text-xl font-black">Favorite</p>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            {{-- timeline --}}
+
+            <div class="w-full">
+                <h2 class="text-xl font-bold text-[#4c5a73] mb-4">Timeline</h2>
+                {{-- ini nanti isinya ada task yang blm di kerjain --}}
+            </div>
+            {{-- Course Section --}}
+            @include('components.coursesCard1')
         </div>
     </div>
-</div>
+    </div>
 @endsection
