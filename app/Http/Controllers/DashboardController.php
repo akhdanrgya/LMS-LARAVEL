@@ -15,4 +15,12 @@ class DashboardController extends Controller
     {
         return view('dashboard.courses');
     }
+    public function task()
+    {
+        return view('dashboard.task');
+    }
+    public function forum()
+    {
+        return view('dashboard.forum');
+    }
 }

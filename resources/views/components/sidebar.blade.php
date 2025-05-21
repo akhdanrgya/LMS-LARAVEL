@@ -1,3 +1,4 @@
+
 <div class="fixed top-0 left-0 h-screen w-[198px] bg-white flex flex-col gap-7 px-6 py-2.5 overflow-y-auto z-50">
   <img src="/images/sidebar-logo.png" class="self-stretch flex-grow-0 flex-shrink-0 h-[73.94px] object-none" />
 
@@ -13,7 +14,7 @@
     <p class="text-sm text-[#4c5a73]">Courses</p>
   </a>
 
-  <a href="" class="flex items-center gap-2.5 cursor-pointer">
+  <a href="{{ route('dashboard.task') }}" class="flex items-center gap-2.5 cursor-pointer">
     <i class="fas fa-list-check text-[#4c5a73] w-4"></i>
     <p class="text-sm text-[#4c5a73]">Task</p>
   </a>

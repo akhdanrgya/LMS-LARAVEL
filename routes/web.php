@@ -8,6 +8,8 @@ use App\Http\Controllers\DashboardController;
 Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/courses', [DashboardController::class, 'courses'])->name('dashboard.courses');
+    Route::get('/task', [DashboardController::class, 'task'])->name('dashboard.task');
+    Route::get('/forum', [DashboardController::class, 'forum'])->name('dashboard.forum');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
