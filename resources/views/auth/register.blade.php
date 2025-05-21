@@ -33,24 +33,27 @@
 <body class="h-screen flex">
 
     <!-- Kiri: Welcome Text -->
-    <div class="w-1/2 bg-custom-purple flex items-center justify-center">
-        <h1 class="text-white text-4xl font-bold text-center">Create your<br>Account</h1>
+    <div class="w-5/6 bg-[url('/images/bg-login.jpeg')] bg-cover bg-center flex p-24">
+        <h1 class="text-white text-6xl font-bold">Create your<br>Account</h1>
     </div>
 
     <!-- Kanan: Form -->
     <div class="w-1/2 flex items-center justify-center bg-white">
         <div class="w-3/4 max-w-md">
-            <h2 class="text-2xl font-bold text-center mb-6 text-custom-purple">Register</h2>
-
+            
             @if($errors->any())
-                <ul class="text-red-500 mb-4">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+            <ul class="text-red-500 mb-4">
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
             @endif
-
+            
             <form method="POST" action="/register" class="space-y-6">
+                <div>
+                    <img src="{{ asset('images/logo-1.png') }}" alt="" srcset="">
+                </div>
+                <h2 class="text-2xl font-bold text-center mb-6 text-custom-purple">Register</h2>
                 @csrf
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>

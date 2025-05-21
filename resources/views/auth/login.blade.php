@@ -27,9 +27,9 @@
 <body class="h-screen flex">
 
   <!-- Kiri: Welcome Text -->
-  <div class="w-1/2 bg-custom-purple flex items-center justify-center">
-    <h1 class="text-white text-4xl font-bold">Hello,<br> welcome!</h1>
-  </div>
+<div class="w-5/6 bg-[url('/images/bg-login.jpeg')] bg-cover bg-center flex p-24">
+  <h1 class="text-white text-6xl font-black">Hello,<br> welcome!</h1>
+</div>
 
   <!-- Kanan: Form -->
   <div class="w-1/2 flex items-center justify-center bg-white">
@@ -40,6 +40,8 @@
 
       <form method="POST" action="/login" class="space-y-6">
         @csrf
+        <img src="{{ asset('images/logo-1.png') }}" alt="" srcset="">
+        
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
           <input type="email" name="email" id="email" required
