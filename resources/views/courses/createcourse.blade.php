@@ -15,7 +15,7 @@
                 </div>
             @endif
 
-            <!-- Jangan lupa enctype buat upload file -->
+            <!-- form -->
             <form action="{{ route('courses.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 

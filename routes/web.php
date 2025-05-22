@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\MentorController;
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout'); // logout action
@@ -23,12 +24,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/courses/{course}/materials', [MaterialController::class, 'index'])->name('materials.index'); // list materials
     });
 
-
-
-
     // Mentor routes to view pages
     Route::middleware('role:mentor')->group(function () {
-        Route::get('/courses/create', [CourseController::class, 'viewCreate'])->name('mentor.createCourse'); // create course form
+        Route::get('/mentor', [MentorController::class, 'index'])->name('mentor.index'); // create course form
+        Route::get('/courses/create', [CourseController::class, 'viewCreate'])->name('courses.createcourse'); // create course form
         Route::get('/courses/{course}/materials/create', [MaterialController::class, 'create'])->name('materials.create'); // create material form
         Route::post('/courses', [CourseController::class, 'store'])->name('courses.store');
     });
@@ -37,7 +36,6 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:admin')->group(function () {
         Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
 
-        // Tambahkan route ini saja
         Route::post('/admin/update-role', [AdminController::class, 'updateRole'])
         ->name('admin.update-role');
     });

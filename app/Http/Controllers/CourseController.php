@@ -128,7 +128,7 @@ class CourseController extends Controller
 
     public function viewCreate()
     {
-        return view('mentor.createCourse');
+        return view('courses.createcourse');
     }
 
     public function enroll(Course $course)

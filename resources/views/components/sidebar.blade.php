@@ -35,7 +35,7 @@
     @endif
 
     @if(auth()->user()->role == 'mentor')
-    <a href="{{ route('mentor.createCourse') }}"
+    <a href="{{ route('courses.createcourse') }}"
     class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
     <i class="fas fa-plus text-[#4c5a73] w-4"></i>
     <p class="text-sm text-[#4c5a73]">Create Course</p>
