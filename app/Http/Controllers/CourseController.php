@@ -15,22 +15,53 @@ class CourseController extends Controller
         return response()->json($courses);
     }
 
-    public function index()
+    public function userCourses()
     {
         $courses = auth()->user()->courses()->latest()->get();
-        return view('dashboard.index', compact('courses'));
+        return view('dashboard.index', [
+            'courses' => $courses,
+            'useAlternateCard' => true
+        ]);
+    }
+
+    // Tampilkan semua course tanpa enrollment (untuk tampilan umum)
+    public function fetchAllCourses()
+    {
+        $courses = Course::with(['author:id,name', 'materials'])
+            ->withCount('materials')
+            ->latest()
+            ->get();
+
+        return view('courses.index', [
+            'courses' => $courses
+        ]);
     }
 
     // Tampilkan detail course berdasarkan model binding
     public function show(Course $course)
     {
-        $course->load('author:id,name,email');
-        return response()->json([
-            'course' => $course->only(['id', 'name', 'description', 'cover_photo', 'created_at', 'updated_at']),
-            'author' => $course->author ? $course->author->only(['id', 'name', 'email']) : null,
+        $course->load([
+            'author:id,name',
+            'materials' => function ($query) {
+                $query->orderBy('order', 'asc');
+            },
+            'enrollments' => function ($query) {
+                $query->where('user_id', auth()->id())->first();
+            }
+        ]);
+
+        // Hitung total durasi course
+        $totalDuration = $course->materials->sum('duration_minutes');
+        $formattedDuration = floor($totalDuration / 60) . 'h ' . ($totalDuration % 60) . 'm';
+
+        return view('courses.show', [
+            'course' => $course,
+            'formattedDuration' => $formattedDuration,
+            'userEnrollment' => $course->enrollments->first(),
+            'materialsCount' => $course->materials->count()
         ]);
     }
-    
+
 
     // Store course baru dengan validasi dan upload cover photo
     public function store(Request $request)
@@ -92,7 +123,20 @@ class CourseController extends Controller
         }
     }
 
-    public function create(){
+    public function create()
+    {
         return view('courses.create');
     }
+
+    public function enroll(Course $course)
+{
+    if(!auth()->user()->enrollments()->where('course_id', $course->id)->exists()) {
+        auth()->user()->enrollments()->create([
+            'course_id' => $course->id,
+            'enrolled_at' => now()
+        ]);
+    }
+
+    return redirect()->route('courses.show', $course);
+}
 }

@@ -44,10 +44,18 @@
 
             <!-- card container -->
             <div class="flex flex-col gap-6 w-full ">
-                <!-- card 1 -->
-                @include("components.coursesCard2")
+                @forelse ($courses as $course)
+                    <x-coursesCard2 :course="$course" />
+                @empty
+                    <div class="col-span-full text-center py-12">
+                        <p class="text-gray-500">You haven't enrolled in any courses yet.</p>
+                        <a href="{{ route('courses.index') }}" class="text-blue-500 hover:underline mt-2 inline-block">
+                            Browse Courses
+                        </a>
+                    </div>
+                @endforelse
             </div>
-            
+
         </div>
     </div>
 @endsection

@@ -26,7 +26,7 @@
             <i class="fa-solid fa-star"></i>
             <p>{{ number_format($course->average_rating, 1) ?? 'N/A' }}</p>
         </div>
-        <a href="{{ route('courses.show', $course) }}"
+        <a href="{{ route(name: 'courses.show', $course) }}"
             class="bg-[#2c2c2c] text-white text-sm px-4 py-2 rounded-lg hover:bg-[#3d3d3d] transition">
             View Course
         </a>

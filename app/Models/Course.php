@@ -48,7 +48,7 @@ class Course extends Model
     // Accessor untuk average rating
     public function getAverageRatingAttribute()
     {
-        return $this->ratings()->avg('rating');
+        return $this->ratings()->avg('rating') ?? 0;
     }
 
     // Accessor untuk format duration
@@ -60,5 +60,15 @@ class Course extends Model
         return $hours > 0
             ? sprintf('%dh %02dm', $hours, $minutes)
             : sprintf('%dm', $minutes);
+    }
+
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'author_id');
+    }
+
+    public function getMaterialsCountAttribute()
+    {
+        return $this->materials_count ?? 0;
     }
 }

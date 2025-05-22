@@ -14,7 +14,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/forum', [DashboardController::class, 'forum'])->name('dashboard.forum'); // forum page
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout'); // logout action
 
-    Route::get('/courses', [CourseController::class, 'index'])->name('dashboard.index');
+    Route::get('/mycourses', [CourseController::class, 'userCourses'])->name('dashboard.index');
+    Route::get('/courses', [CourseController::class, 'fetchAllCourses'])->name('courses.index');
 
     // Mentor routes to view pages
     Route::middleware('role:mentor,admin')->group(function () {
@@ -23,6 +24,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/courses/{course}/materials', [MaterialController::class, 'index'])->name('materials.index'); // list materials
         Route::get('/courses/{course}/materials/create', [MaterialController::class, 'create'])->name('materials.create'); // create material form
         Route::post('/courses', [CourseController::class, 'store'])->name('courses.store');
+        Route::post('/courses/{course}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
     });
 });
 
