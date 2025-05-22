@@ -8,41 +8,28 @@ use Illuminate\Http\Request;
 
 class MaterialController extends Controller
 {
-    /**
-     * Menampilkan semua materi untuk course tertentu.
-     *
-     * @param  int  $courseId
-     * @return \Illuminate\Http\Response
-     */
+    // Tampil semua materi buat course tertentu
     public function index($courseId)
     {
         $course = Course::findOrFail($courseId);
-        $materials = $course->materials;
+        $materials = $course->materials()->select('id', 'course_id', 'content', 'created_at', 'updated_at')->get();
         return response()->json($materials);
     }
 
-    /**
-     * Menyimpan materi baru untuk course tertentu.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $courseId
-     * @return \Illuminate\Http\Response
-     */
-    // app/Http/Controllers/MaterialController.php
+    // Form buat tambah materi baru
     public function create(Course $course)
     {
         return view('materials.create', compact('course'));
     }
 
+    // Simpan materi baru
     public function store(Request $request, Course $course)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
             'content' => 'required|string',
         ]);
 
         $material = new Material();
-        $material->title = $request->title;
         $material->content = $request->content;
         $material->course_id = $course->id;
         $material->save();
@@ -50,52 +37,29 @@ class MaterialController extends Controller
         return redirect()->route('courses.show', $course->id)->with('success', 'Material added successfully.');
     }
 
-
-    /**
-     * Menampilkan materi tertentu.
-     *
-     * @param  int  $courseId
-     * @param  int  $materialId
-     * @return \Illuminate\Http\Response
-     */
+    // Tampil materi tertentu
     public function show($courseId, $materialId)
     {
         $course = Course::findOrFail($courseId);
-        $material = $course->materials()->findOrFail($materialId);
+        $material = $course->materials()->select('id', 'course_id', 'content', 'created_at', 'updated_at')->findOrFail($materialId);
         return response()->json($material);
     }
 
-    /**
-     * Update materi untuk course tertentu.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $courseId
-     * @param  int  $materialId
-     * @return \Illuminate\Http\Response
-     */
+    // Update materi tertentu
     public function update(Request $request, $courseId, $materialId)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'file_path' => 'nullable|file',
+            'content' => 'required|string',
         ]);
 
         $course = Course::findOrFail($courseId);
         $material = $course->materials()->findOrFail($materialId);
-
         $material->update($validated);
 
         return response()->json($material);
     }
 
-    /**
-     * Menghapus materi dari course tertentu.
-     *
-     * @param  int  $courseId
-     * @param  int  $materialId
-     * @return \Illuminate\Http\Response
-     */
+    // Hapus materi
     public function destroy($courseId, $materialId)
     {
         $course = Course::findOrFail($courseId);
