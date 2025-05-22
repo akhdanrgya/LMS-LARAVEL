@@ -16,7 +16,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/mycourses', [CourseController::class, 'userCourses'])->name('dashboard.index');
     Route::get('/courses', [CourseController::class, 'fetchAllCourses'])->name('courses.index');
-    Route::get('/courses/{course}', [CourseController::class, 'show'])->name('courses.show'); // course detail
+    Route::get('/courses/{course:name}', [CourseController::class, 'show'])->name('courses.show'); // course detail
     Route::post('/courses/{course}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
     Route::get('/courses/{course}/materials', [MaterialController::class, 'index'])->name('materials.index'); // list materials
 

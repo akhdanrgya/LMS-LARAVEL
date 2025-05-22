@@ -6,8 +6,8 @@
         alt="{{ $course->name }}" class="rounded-xl w-full h-[150px] object-cover" />
 
     <div class="flex flex-col gap-1">
-        <p class="text-[#4c5a73] text-base font-semibold">{{ $course->name }}</p>
-        <p class="text-[#b3b3b3] text-sm">by {{ $course->author->name ?? 'Unknown Author' }}</p>
+        <p class="text-[#766bd8] text-2xl font-semibold">{{ $course->name }}</p>
+        <p class="text-[#4c5a73] text-sm">by {{ $course->author->name ?? 'Unknown Author' }}</p>
     </div>
 
     <div class="flex justify-between items-center">
@@ -26,7 +26,7 @@
             <i class="fa-solid fa-star"></i>
             <p>{{ number_format($course->average_rating, 1) ?? 'N/A' }}</p>
         </div>
-        <a href="{{ route('courses.show', $course) }}"
+        <a href="{{ route('courses.show', $course->name) }}"
             class="bg-[#2c2c2c] text-white text-sm px-4 py-2 rounded-lg hover:bg-[#3d3d3d] transition">
             View Course
         </a>
