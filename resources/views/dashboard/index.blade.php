@@ -34,6 +34,14 @@
                                     Settings
                                 </a>
                             </li>
+                            @if (auth()->user()->name == "admin")
+                                <li>
+                                    <a href="/settings" class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100">
+                                        <i class="fa-solid fa-users text-[#4c5a73] text-base"></i>
+                                        Role
+                                    </a>
+                                </li>
+                            @endif
                             <li>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf

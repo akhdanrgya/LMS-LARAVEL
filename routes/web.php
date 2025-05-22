@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\EnrollmentController;
 
 
 Route::middleware('auth')->group(function () {
@@ -26,10 +27,13 @@ Route::middleware('guest')->group(function () {
 Route::middleware(['auth', 'role:mentor'])->group(function () {
     Route::get('/courses/create', [CourseController::class, 'create'])->name('courses.create');
     Route::post('/courses', [CourseController::class, 'store'])->name('courses.store');
-
     Route::get('/courses/{course}/materials/create', [MaterialController::class, 'create'])->name('materials.create');
     Route::post('/courses/{course}/materials', [MaterialController::class, 'store'])->name('materials.store');
+    Route::get('/courses/{course}', [CourseController::class, 'show'])->name('courses.show');
+    Route::get('/courses/{course}/materials', [MaterialController::class, 'index'])->name('materials.index');
+
 });
+
 
 Route::middleware(['auth', 'role:student'])->group(function () {
     Route::post('/courses/{course}/enroll', [EnrollmentController::class, 'enroll'])->name('courses.enroll');
