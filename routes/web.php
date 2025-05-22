@@ -5,28 +5,41 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\MaterialController;
-use App\Models\User;
+use App\Http\Controllers\AdminController;
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard'); // view home/dashboard
-    Route::get('/{user:name}/courses', [DashboardController::class, 'courses'])->name('dashboard.courses'); // list courses view
-    Route::get('/task', [DashboardController::class, 'task'])->name('dashboard.task'); // task page
-    Route::get('/forum', [DashboardController::class, 'forum'])->name('dashboard.forum'); // forum page
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout'); // logout action
 
-    Route::get('/mycourses', [CourseController::class, 'userCourses'])->name('dashboard.index');
-    Route::get('/courses', [CourseController::class, 'fetchAllCourses'])->name('courses.index');
-    Route::get('/courses/{course:name}', [CourseController::class, 'show'])->name('courses.show'); // course detail
-    Route::post('/courses/{course}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
-    Route::get('/courses/{course}/materials', [MaterialController::class, 'index'])->name('materials.index'); // list materials
+    Route::middleware('role:mentor,student')->group(function () {
+        Route::get('/', [DashboardController::class, 'index'])->name('dashboard'); // view home/dashboard
+        Route::get('/{user:name}/courses', [DashboardController::class, 'courses'])->name('dashboard.courses'); // list courses view
+        Route::get('/task', [DashboardController::class, 'task'])->name('dashboard.task'); // task page
+        Route::get('/forum', [DashboardController::class, 'forum'])->name('dashboard.forum'); // forum page
+
+        Route::get('/mycourses', [CourseController::class, 'userCourses'])->name('dashboard.index');
+        Route::get('/courses', [CourseController::class, 'fetchAllCourses'])->name('courses.index');
+        Route::get('/courses/{course:name}', [CourseController::class, 'show'])->name('courses.show'); // course detail
+        Route::post('/courses/{course}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
+        Route::get('/courses/{course}/materials', [MaterialController::class, 'index'])->name('materials.index'); // list materials
+    });
+
 
 
 
     // Mentor routes to view pages
-    Route::middleware('role:mentor,admin')->group(function () {
-        Route::get('/courses/create', [CourseController::class, 'create'])->name('courses.create'); // create course form
+    Route::middleware('role:mentor')->group(function () {
+        Route::get('/courses/create', [CourseController::class, 'viewCreate'])->name('courses.create'); // create course form
         Route::get('/courses/{course}/materials/create', [MaterialController::class, 'create'])->name('materials.create'); // create material form
         Route::post('/courses', [CourseController::class, 'store'])->name('courses.store');
+    });
+
+    // admin route
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+
+        // Tambahkan route ini saja
+        Route::post('/admin/update-role', [AdminController::class, 'updateRole'])
+        ->name('admin.update-role');
     });
 });
 

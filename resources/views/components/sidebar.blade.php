@@ -19,7 +19,7 @@
     </a>
     <a href="{{ route('courses.index')}}"
     class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
-    <i class="fas fa-chalkboard-user text-[#4c5a73] w-4"></i>
+    <i class="fas fa-chalkboard text-[#4c5a73] w-4"></i>
     <p class="text-sm text-[#4c5a73]">All Courses</p>
     </a>
     <a href="{{ route('dashboard.task') }}"
@@ -35,7 +35,8 @@
     @endif
 
     @if(auth()->user()->role == 'mentor')
-    <a href="{{ route('courses.create') }}" class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
+    <a href="{{ route('courses.create') }}"
+    class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
     <i class="fas fa-plus text-[#4c5a73] w-4"></i>
     <p class="text-sm text-[#4c5a73]">Create Course</p>
     </a>
@@ -50,35 +51,19 @@
     @endif
 
     @if(auth()->user()->role == "admin")
-    <p class="text-xs text-[#4c5a73]">STUDENT MENU</p>
-    <a href="{{ route('dashboard.courses') }}"
+    <a href="{{ route('admin.index')}}"
     class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
-    <i class="fas fa-chalkboard-user text-[#4c5a73] w-4"></i>
-    <p class="text-sm text-[#4c5a73]">Courses</p>
+    <i class="fas fa-user-tie text-[#4c5a73] w-4"></i>
+    <p class="text-sm text-[#4c5a73]">Admin Dashboard</p>
     </a>
-    <a href="{{ route('dashboard.task') }}"
-    class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
-    <i class="fas fa-list-check text-[#4c5a73] w-4"></i>
-    <p class="text-sm text-[#4c5a73]">Task</p>
-    </a>
-    <a href="{{ route('dashboard.forum') }}"
-    class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
+    <p class="text-xs text-[#4c5a73]">ADMIN MENU</p>
+    <a href="" class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
     <i class="fas fa-users text-[#4c5a73] w-4"></i>
-    <p class="text-sm text-[#4c5a73]">Forum</p>
-    </a>
-    <p class="text-xs text-[#4c5a73]">MENTOR MENU</p>
-
-    <a href="{{ route("courses.create")}}" class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
-    <i class="fas fa-plus text-[#4c5a73] w-4"></i>
-    <p class="text-sm text-[#4c5a73]">Create Course</p>
+    <p class="text-sm text-[#4c5a73]">User Management</p>
     </a>
     <a href="" class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
-    <i class="fas fa-book text-[#4c5a73] w-4"></i>
-    <p class="text-sm text-[#4c5a73]">Manage Courses</p>
-    </a>
-    <a href="" class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
-    <i class="fas fa-file-alt text-[#4c5a73] w-4"></i>
-    <p class="text-sm text-[#4c5a73]">Materials</p>
+    <i class="fas fa-chalkboard text-[#4c5a73] w-4"></i>
+    <p class="text-sm text-[#4c5a73]">Course Management</p>
     </a>
     @endif
 
