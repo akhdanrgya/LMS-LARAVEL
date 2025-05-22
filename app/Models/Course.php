@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\CourseRating;
 
 class Course extends Model
 {
@@ -23,10 +24,8 @@ class Course extends Model
     public function students()
     {
         return $this->belongsToMany(User::class)
-        ->withPivot('completed');
+            ->withPivot('completed');
     }
-
-
     /**
      * Relasi satu ke banyak dengan Materials
      */
@@ -38,5 +37,28 @@ class Course extends Model
     public function mentor()
     {
         return $this->belongsTo(User::class, 'mentor_id');
+    }
+
+    // Tambahkan accessor untuk cover photo URL
+    public function ratings()
+    {
+        return $this->hasMany(CourseRating::class);
+    }
+
+    // Accessor untuk average rating
+    public function getAverageRatingAttribute()
+    {
+        return $this->ratings()->avg('rating');
+    }
+
+    // Accessor untuk format duration
+    public function getFormattedDurationAttribute()
+    {
+        $hours = floor($this->duration_minutes / 60);
+        $minutes = $this->duration_minutes % 60;
+
+        return $hours > 0
+            ? sprintf('%dh %02dm', $hours, $minutes)
+            : sprintf('%dm', $minutes);
     }
 }
