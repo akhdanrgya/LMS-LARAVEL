@@ -1,8 +1,8 @@
 @extends('layouts.layout')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+<div class="min-h-screen pl-[198px]">
+    <div class="">
         <!-- Cover Photo -->
         <div class="h-64 w-full relative">
             <img src="{{ $course->cover_photo ? asset('storage/' . $course->cover_photo) : asset('images/course-default.jpg') }}" 
@@ -56,7 +56,7 @@
 
             <!-- Sidebar -->
             <div class="space-y-4">
-                <div class="bg-gray-50 p-4 rounded-lg">
+                <div class="bg-white p-4 rounded-lg">
                     <h3 class="font-semibold mb-3">Course Details</h3>
                     <div class="space-y-3">
                         <div class="flex items-center gap-2">
