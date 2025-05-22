@@ -9,7 +9,7 @@ use App\Models\User;
 
 Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard'); // view home/dashboard
-    Route::get('/{user}/courses',[DashboardController::class, 'courses'])->name('dashboard.courses'); // list courses view
+    Route::get('/{user:name}/courses', [DashboardController::class, 'courses'])->name('dashboard.courses'); // list courses view
     Route::get('/task', [DashboardController::class, 'task'])->name('dashboard.task'); // task page
     Route::get('/forum', [DashboardController::class, 'forum'])->name('dashboard.forum'); // forum page
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout'); // logout action

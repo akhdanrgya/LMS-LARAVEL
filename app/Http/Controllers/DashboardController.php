@@ -18,9 +18,18 @@ class DashboardController extends Controller
         return view('dashboard.index', compact('courses'));
     }
 
-    public function courses(User $user)
+    public function courses(User $user) 
     {
-        $courses = Course::where('id', $user->id)->get();
+        // Authorization check
+        if (auth()->id() !== $user->id) {
+            abort(403, 'Unauthorized action.');
+        }
+    
+        $courses = $user->courses()
+                    ->withCount('materials')
+                    ->latest()
+                    ->get();
+    
         return view('dashboard.courses', compact('courses', 'user'));
     }
 

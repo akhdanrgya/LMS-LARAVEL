@@ -51,10 +51,15 @@ class User extends Authenticatable
      * Relasi banyak ke banyak dengan Course (Student)
      */
 
-     public function courses()
-     {
-         return $this->belongsToMany(Course::class)
-                    ->withPivot('completed')
-                    ->withCount('materials');
-     }
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class)
+            ->withPivot('completed')
+            ->withCount('materials');
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'name';
+    }
 }
