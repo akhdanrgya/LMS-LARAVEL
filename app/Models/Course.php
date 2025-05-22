@@ -21,10 +21,17 @@ class Course extends Model
      * Relasi banyak ke banyak dengan User (Students)
      */
     // app/Models/Course.php
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
+    // app/Models/Course.php
     public function students()
     {
-        return $this->belongsToMany(User::class)
-            ->withPivot('completed');
+        return $this->belongsToMany(User::class, 'enrollments')
+            ->withPivot('completed')
+            ->withTimestamps();
     }
     /**
      * Relasi satu ke banyak dengan Materials

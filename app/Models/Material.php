@@ -14,6 +14,7 @@ class Material extends Model
         'description',
         'file_path',
         'course_id',
+        'order',
     ];
 
     /**

@@ -112,17 +112,13 @@
             </div>
             <h2 class="text-xl font-bold text-[#4c5a73] mb-4">Your Courses</h2>
             @forelse($courses as $course)
-            <x-coursesCard1 
-                :name="$course->name" 
-                :description="$course->description" 
-                :cover_photo="$course->cover_photo"
-                :lesson_count="$course->materials_count"
-                :progress="optional($course->pivot)->completed ? 100 : 0" />
-        @empty
-            <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4">
-                <p>You haven't enrolled in any courses yet.</p>
-            </div>
-        @endforelse
+                <x-coursesCard1 :name="$course->name" :description="$course->description" :cover_photo="$course->cover_photo"
+                    :lesson_count="$course->materials_count" :progress="optional($course->pivot)->completed ? 100 : 0" />
+            @empty
+                <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4">
+                    <p>You haven't enrolled in any courses yet.</p>
+                </div>
+            @endforelse
         </div>
     </div>
     </div>

@@ -56,6 +56,9 @@ class CourseController extends Controller
 
         return view('courses.show', [
             'course' => $course,
+            'cover_photo' => $course->cover_photo,
+            'name' => $course->name, 
+            'description' => $course->description,
             'formattedDuration' => $formattedDuration,
             'userEnrollment' => $course->enrollments->first(),
             'materialsCount' => $course->materials->count()

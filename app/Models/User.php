@@ -51,11 +51,19 @@ class User extends Authenticatable
      * Relasi banyak ke banyak dengan Course (Student)
      */
 
+    // app/Models/User.php
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
+    // app/Models/User.php
     public function courses()
     {
-        return $this->belongsToMany(Course::class)
-            ->withPivot('completed')
-            ->withCount('materials');
+        return $this->belongsToMany(Course::class, 'enrollments')
+            ->withPivot('completed') // hanya kolom yang ada
+            ->withTimestamps()
+            ->orderByDesc('created_at'); // sesuai error Anda
     }
 
     public function getRouteKeyName()
