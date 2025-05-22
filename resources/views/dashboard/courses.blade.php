@@ -6,14 +6,7 @@
         <div class="max-w-screen-xl mx-auto px-6 py-6 flex flex-col gap-8">
 
             <!-- header -->
-            <div class="flex justify-between items-center w-full h-10">
-                <p class="text-3xl text-[#4c5a73]">My Courses</p>
-                <div class="flex items-center gap-6">
-                    <i class="fa-regular fa-bell text-xl text-[#4c5a73]"></i>
-                    <p class="text-xl text-[#4c5a73] text-center">{{Auth::user()->name}}</p>
-                    <i class="fa-solid fa-chevron-down text-xl text-[#4c5a73]"></i>
-                </div>
-            </div>
+            @include('components.header')
 
             <!-- search + filters -->
             <div class="flex justify-between items-center w-full h-10">
@@ -43,7 +36,7 @@
             </div>
 
             <!-- card container -->
-            <div class="flex flex-col gap-6 w-full ">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @forelse ($courses as $course)
                     <x-coursesCard2 :course="$course" />
                 @empty
