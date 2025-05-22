@@ -28,7 +28,7 @@ Route::middleware('auth')->group(function () {
 
     // Mentor routes to view pages
     Route::middleware('role:mentor')->group(function () {
-        Route::get('/courses/create', [CourseController::class, 'viewCreate'])->name('courses.create'); // create course form
+        Route::get('/courses/create', [CourseController::class, 'viewCreate'])->name('mentor.createCourse'); // create course form
         Route::get('/courses/{course}/materials/create', [MaterialController::class, 'create'])->name('materials.create'); // create material form
         Route::post('/courses', [CourseController::class, 'store'])->name('courses.store');
     });
