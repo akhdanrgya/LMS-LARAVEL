@@ -28,20 +28,28 @@ class MaterialController extends Controller
      * @param  int  $courseId
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $courseId)
+    // app/Http/Controllers/MaterialController.php
+    public function create(Course $course)
     {
-        $validated = $request->validate([
+        return view('materials.create', compact('course'));
+    }
+
+    public function store(Request $request, Course $course)
+    {
+        $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'file_path' => 'nullable|file',
+            'content' => 'required|string',
         ]);
 
-        $course = Course::findOrFail($courseId);
+        $material = new Material();
+        $material->title = $request->title;
+        $material->content = $request->content;
+        $material->course_id = $course->id;
+        $material->save();
 
-        $material = $course->materials()->create($validated);
-
-        return response()->json($material, 201);
+        return redirect()->route('courses.show', $course->id)->with('success', 'Material added successfully.');
     }
+
 
     /**
      * Menampilkan materi tertentu.

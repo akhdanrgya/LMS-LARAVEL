@@ -36,17 +36,25 @@ class CourseController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    public function create()
+    {
+        return view('courses.create');
+    }
+    
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'cover_image' => 'nullable|image',
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
         ]);
-
-        $course = Course::create($validated);
-
-        return response()->json($course, 201);
+    
+        $course = new Course();
+        $course->title = $request->title;
+        $course->description = $request->description;
+        $course->mentor_id = auth()->id();
+        $course->save();
+    
+        return redirect()->route('courses.index')->with('success', 'Course created successfully.');
     }
 
     /**

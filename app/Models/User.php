@@ -47,7 +47,7 @@ class User extends Authenticatable
         ];
     }
 
-        /**
+    /**
      * Relasi banyak ke banyak dengan Course (Student)
      */
 
@@ -55,4 +55,11 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Course::class);
     }
+
+    // app/Models/User.php
+    public function enrolledCourses()
+    {
+        return $this->belongsToMany(Course::class, 'enrollments');
+    }
+
 }

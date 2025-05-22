@@ -19,10 +19,12 @@ class Course extends Model
     /**
      * Relasi banyak ke banyak dengan User (Students)
      */
+    // app/Models/Course.php
     public function students()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class, 'enrollments');
     }
+
 
     /**
      * Relasi satu ke banyak dengan Materials
@@ -31,4 +33,10 @@ class Course extends Model
     {
         return $this->hasMany(Material::class);
     }
+
+    public function mentor()
+    {
+        return $this->belongsTo(User::class, 'mentor_id');
+    }
+
 }
