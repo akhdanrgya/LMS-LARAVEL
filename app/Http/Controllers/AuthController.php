@@ -16,25 +16,26 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-
-            if (auth()->user()->role === 'mentor') {
-                return redirect()->route('dashboard');
-            } elseif (auth()->user()->role === 'student') {
-                return redirect()->route('dashboard');
-            } elseif (auth()->user()->role === 'admin') {
-                return redirect()->route('dashboard');
-            }else {
-                Auth::logout();
-                return back()->withErrors(['email' => 'Role tidak dikenali']);
-            }
+            // Redirect berdasarkan role
+            return match (auth()->user()->role) {
+                'admin' => redirect()->route('dashboard'),
+                'mentor' => redirect()->route('dashboard'),
+                'student' => redirect()->route('dashboard'),
+                default => $this->logout($request)
+            };
         }
 
-        return back()->withErrors(['email' => 'Email atau password salah']);
+        return back()->withErrors([
+            'email' => 'Email atau password salah',
+        ])->onlyInput('email');
     }
 
     public function showRegister()
@@ -44,23 +45,24 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users',
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            'role'     => 'required|in:mentor,student',
+            'role' => 'required|in:mentor,student',
         ]);
 
-        User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => Hash::make($request->password),
-            'role'     => $request->role,
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role' => $validated['role'],
         ]);
 
-        return redirect()->route('login')->with('success', 'Berhasil daftar, silakan login');
+        Auth::login($user);
+
+        return redirect()->route('dashboard')->with('success', 'Registrasi berhasil!');
     }
-
     public function logout(Request $request)
     {
         Auth::logout();

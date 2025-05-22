@@ -9,17 +9,28 @@ use Illuminate\Support\Facades\Storage;
 class CourseController extends Controller
 {
     // Tampilkan semua course (API)
-    public function index()
+    public function indexApi()
     {
         $courses = Course::select('id', 'name', 'description', 'cover_photo', 'created_at', 'updated_at')->get();
         return response()->json($courses);
     }
 
+    public function index()
+    {
+        $courses = auth()->user()->courses()->latest()->get();
+        return view('dashboard.index', compact('courses'));
+    }
+
     // Tampilkan detail course berdasarkan model binding
     public function show(Course $course)
     {
-        return response()->json($course->only(['id', 'name', 'description', 'cover_photo', 'created_at', 'updated_at']));
+        $course->load('author:id,name,email');
+        return response()->json([
+            'course' => $course->only(['id', 'name', 'description', 'cover_photo', 'created_at', 'updated_at']),
+            'author' => $course->author ? $course->author->only(['id', 'name', 'email']) : null,
+        ]);
     }
+    
 
     // Store course baru dengan validasi dan upload cover photo
     public function store(Request $request)
@@ -39,7 +50,7 @@ class CourseController extends Controller
         $course->name = $validated['name'];
         $course->description = $validated['description'];
         $course->cover_photo = $validated['cover_photo'] ?? null;
-        $course->mentor_id = auth()->id();
+        $course->author_id = auth()->id();
         $course->save();
 
         return response()->json($course->only(['id', 'name', 'description', 'cover_photo', 'created_at', 'updated_at']), 201);
@@ -79,5 +90,9 @@ class CourseController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to delete course'], 500);
         }
+    }
+
+    public function create(){
+        return view('courses.create');
     }
 }

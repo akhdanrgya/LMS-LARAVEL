@@ -68,4 +68,12 @@ class MaterialController extends Controller
 
         return response()->json(['message' => 'Material deleted successfully']);
     }
+
+    public function yourCourses()
+    {
+        $courses = auth()->user()->courses()->withCount('materials')->get();
+
+        return view('your-courses', compact('courses'));
+    }
+
 }

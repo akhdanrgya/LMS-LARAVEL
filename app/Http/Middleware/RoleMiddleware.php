@@ -16,9 +16,9 @@ class RoleMiddleware
         }
 
         // Cek apakah user punya salah satu role yang diizinkan
-        if (! in_array(auth()->user()->role, $roles)) {
+        if (! in_array(strtolower(auth()->user()->role), array_map('strtolower', $roles))) {
             return response()->json(['error' => 'Forbidden'], 403);
-        }
+        }        
 
         return $next($request);
     }

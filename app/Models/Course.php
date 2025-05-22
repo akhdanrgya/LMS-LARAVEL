@@ -22,7 +22,8 @@ class Course extends Model
     // app/Models/Course.php
     public function students()
     {
-        return $this->belongsToMany(User::class, 'enrollments');
+        return $this->belongsToMany(User::class)
+        ->withPivot('completed');
     }
 
 
@@ -38,5 +39,4 @@ class Course extends Model
     {
         return $this->belongsTo(User::class, 'mentor_id');
     }
-
 }

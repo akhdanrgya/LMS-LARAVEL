@@ -16,7 +16,6 @@ class CreateCoursesTable extends Migration
     {
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
-            $table->author(Auth::user()->userId);
             $table->string('name');
             $table->text('description');
             $table->string('cover_photo');  // Untuk nyimpen nama file foto cover

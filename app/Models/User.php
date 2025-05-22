@@ -51,15 +51,10 @@ class User extends Authenticatable
      * Relasi banyak ke banyak dengan Course (Student)
      */
 
-    public function courses()
-    {
-        return $this->belongsToMany(Course::class);
-    }
-
-    // app/Models/User.php
-    public function enrolledCourses()
-    {
-        return $this->belongsToMany(Course::class, 'enrollments');
-    }
-
+     public function courses()
+     {
+         return $this->belongsToMany(Course::class)
+                    ->withPivot('completed')
+                    ->withCount('materials');
+     }
 }
