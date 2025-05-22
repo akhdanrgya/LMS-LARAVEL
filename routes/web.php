@@ -11,33 +11,36 @@ use App\Http\Controllers\MentorController;
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout'); // logout action
 
+
     Route::middleware('role:mentor,student')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard'); // view home/dashboard
+        Route::get('/courses', [CourseController::class, 'fetchAllCourses'])->name('courses.index');
         Route::get('/{user:name}/courses', [DashboardController::class, 'courses'])->name('dashboard.courses'); // list courses view
         Route::get('/task', [DashboardController::class, 'task'])->name('dashboard.task'); // task page
         Route::get('/forum', [DashboardController::class, 'forum'])->name('dashboard.forum'); // forum page
-
+        
+        Route::middleware('role:mentor')->group(function () {
+            Route::get('/courses/create', [CourseController::class, 'viewCreate'])->name('courses.create'); // create course form
+            Route::get('/mentor', [MentorController::class, 'index'])->name('mentor.index'); // create course form
+            Route::get('/courses/{course}/materials/create', [MaterialController::class, 'create'])->name('materials.create'); // create material form
+            Route::post('/courses', [CourseController::class, 'store'])->name('courses.store');
+        });
+        
         Route::get('/mycourses', [CourseController::class, 'userCourses'])->name('dashboard.index');
-        Route::get('/courses', [CourseController::class, 'fetchAllCourses'])->name('courses.index');
         Route::get('/courses/{course:name}', [CourseController::class, 'show'])->name('courses.show'); // course detail
         Route::post('/courses/{course}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
         Route::get('/courses/{course}/materials', [MaterialController::class, 'index'])->name('materials.index'); // list materials
+        
     });
-
+    
     // Mentor routes to view pages
-    Route::middleware('role:mentor')->group(function () {
-        Route::get('/mentor', [MentorController::class, 'index'])->name('mentor.index'); // create course form
-        Route::get('/courses/create', [CourseController::class, 'viewCreate'])->name('courses.createcourse'); // create course form
-        Route::get('/courses/{course}/materials/create', [MaterialController::class, 'create'])->name('materials.create'); // create material form
-        Route::post('/courses', [CourseController::class, 'store'])->name('courses.store');
-    });
 
     // admin route
     Route::middleware('role:admin')->group(function () {
         Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
 
         Route::post('/admin/update-role', [AdminController::class, 'updateRole'])
-        ->name('admin.update-role');
+            ->name('admin.update-role');
     });
 });
 
