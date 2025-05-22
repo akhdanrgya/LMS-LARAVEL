@@ -78,7 +78,7 @@
                             <i class="fas fa-check-circle mr-2"></i>
                             You're enrolled in this course
                         </div>
-                        <a href="{{ route('materials.show', [$course, $course->materials->first()]) }}" 
+                        <a href="{{ route('materials.index', [$course, $course->materials->first()]) }}" 
                            class="mt-4 block w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-2 px-4 rounded-lg transition">
                             Continue Learning
                         </a>

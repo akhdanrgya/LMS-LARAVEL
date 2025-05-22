@@ -18,11 +18,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/courses', [CourseController::class, 'fetchAllCourses'])->name('courses.index');
     Route::get('/courses/{course}', [CourseController::class, 'show'])->name('courses.show'); // course detail
     Route::post('/courses/{course}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
+    Route::get('/courses/{course}/materials', [MaterialController::class, 'index'])->name('materials.index'); // list materials
+
+
 
     // Mentor routes to view pages
     Route::middleware('role:mentor,admin')->group(function () {
         Route::get('/courses/create', [CourseController::class, 'create'])->name('courses.create'); // create course form
-        Route::get('/courses/{course}/materials', [MaterialController::class, 'index'])->name('materials.index'); // list materials
         Route::get('/courses/{course}/materials/create', [MaterialController::class, 'create'])->name('materials.create'); // create material form
         Route::post('/courses', [CourseController::class, 'store'])->name('courses.store');
     });

@@ -72,8 +72,7 @@ class MaterialController extends Controller
     public function yourCourses()
     {
         $courses = auth()->user()->courses()->withCount('materials')->get();
-
-        return view('your-courses', compact('courses'));
+        return view('courses.show', compact('courses'));
     }
 
 }
