@@ -25,6 +25,8 @@ Route::middleware('auth')->group(function () {
             Route::get('/courses/create', [CourseController::class, 'viewCreate'])->name('courses.create'); // create course form
             Route::get('/mentor', [MentorController::class, 'index'])->name('mentor.index'); // create course form
             Route::get('/courses/{course}/materials/create', [MaterialController::class, 'create'])->name('materials.create'); // create material form
+            Route::get('/managecourse', [MentorController::class, 'managecourse'])->name(name: 'mentor.managecourse'); // create material form
+            Route::get('/managematerial', [MentorController::class, 'managematerial'])->name(name: 'mentor.managematerial'); // create material form
             Route::post('/courses', [CourseController::class, 'store'])->name('courses.store');
         });
         

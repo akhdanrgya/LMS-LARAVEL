@@ -2,7 +2,8 @@
 
 @section('content')
     <div class="pl-[198px]">
-        <div class="container mt-4">
+        <div class="max-w-screen-xl mx-auto px-6 py-6 flex flex-col gap-8">
+            @include('components.header')
             <h1 class="mb-4">Create New Course</h1>
 
             @if ($errors->any())

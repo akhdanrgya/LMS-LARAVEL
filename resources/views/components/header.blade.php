@@ -4,7 +4,7 @@
         <div class="w-full max-w-[658px]">
             <p class="text-[#4c5a73] text-3xl">Admin Dashboard</p>
         </div>
-    @elseif (request()->is('courses'))
+    @elseif (request()->is('courses/*'))
         <div class="w-full max-w-[658px]">
             <p class="text-[#4c5a73] text-3xl">Courses</p>
         </div>
@@ -19,6 +19,14 @@
     @elseif (request()->is('coursemanagement'))
         <div class="w-full max-w-[658px]">
             <p class="text-[#4c5a73] text-3xl">Course Management</p>
+        </div>
+    @elseif (request()->is('managecourse'))
+        <div class="w-full max-w-[658px]">
+            <p class="text-[#4c5a73] text-3xl">Course Management</p>
+        </div>
+    @elseif (request()->is('managematerial'))
+        <div class="w-full max-w-[658px]">
+            <p class="text-[#4c5a73] text-3xl">Materials Management</p>
         </div>
     @else
         <div class="flex items-center gap-4 px-6 py-3 rounded-full bg-white border border-[#4c5a73] w-full max-w-[658px]">
