@@ -27,7 +27,7 @@ class AuthController extends Controller
             // Redirect berdasarkan role
             return match (auth()->user()->role) {
                 'admin' => redirect()->route('admin'),
-                'mentor' => redirect()->route('dashboard'),
+                'mentor' => redirect()->route('mentor'),
                 'student' => redirect()->route('dashboard'),
                 default => $this->logout($request)
             };

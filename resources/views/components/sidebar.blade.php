@@ -3,14 +3,16 @@
 
   <p class="text-xs text-[#4c5a73]">OVERVIEW</p>
 
+  @auth
   {{-- Home semua role bisa lihat --}}
+  @if(auth()->user()->role == 'student')
   <a href="{{ route('dashboard') }}"
     class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
     <i class="fas fa-home text-[#4c5a73] w-4"></i>
     <p class="text-sm text-[#4c5a73]">Home</p>
   </a>
+  @endif
 
-  @auth
     @if(auth()->user()->role == 'student')
     <a href="{{ route('dashboard.courses', auth()->user()) }}"
     class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
@@ -35,6 +37,11 @@
     @endif
 
     @if(auth()->user()->role == 'mentor')
+    <a href="{{ route('mentor.index')}}"
+    class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
+    <i class="fas fa-person-chalkboard text-[#4c5a73] w-4"></i>
+    <p class="text-sm text-[#4c5a73]">Mentor Dashboard</p>
+    </a>
     <a href="{{ route('courses.create') }}"
     class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
     <i class="fas fa-plus text-[#4c5a73] w-4"></i>
@@ -57,11 +64,11 @@
     <p class="text-sm text-[#4c5a73]">Admin Dashboard</p>
     </a>
     <p class="text-xs text-[#4c5a73]">ADMIN MENU</p>
-    <a href="" class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
+    <a href="{{route('admin.usermanagement')}}" class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
     <i class="fas fa-users text-[#4c5a73] w-4"></i>
     <p class="text-sm text-[#4c5a73]">User Management</p>
     </a>
-    <a href="" class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
+    <a href="{{route('admin.coursemanagement')}}" class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
     <i class="fas fa-chalkboard text-[#4c5a73] w-4"></i>
     <p class="text-sm text-[#4c5a73]">Course Management</p>
     </a>

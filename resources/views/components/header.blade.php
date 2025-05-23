@@ -12,6 +12,14 @@
         <div class="w-full max-w-[658px]">
             <p class="text-[#4c5a73] text-3xl">My Courses</p>
         </div>
+    @elseif (request()->is('usermanagement'))
+        <div class="w-full max-w-[658px]">
+            <p class="text-[#4c5a73] text-3xl">User Management</p>
+        </div>
+    @elseif (request()->is('coursemanagement'))
+        <div class="w-full max-w-[658px]">
+            <p class="text-[#4c5a73] text-3xl">Course Management</p>
+        </div>
     @else
         <div class="flex items-center gap-4 px-6 py-3 rounded-full bg-white border border-[#4c5a73] w-full max-w-[658px]">
             <i class="fa-solid fa-magnifying-glass text-[#4c5a73] text-xl"></i>

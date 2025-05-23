@@ -7,6 +7,8 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\MentorController;
+use App\Http\Controllers\UserManagementController;
+use App\Http\Controllers\CourseManagementController;
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout'); // logout action
@@ -38,6 +40,8 @@ Route::middleware('auth')->group(function () {
     // admin route
     Route::middleware('role:admin')->group(function () {
         Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+        Route::get('/usermanagement', [UserManagementController::class, 'index'])->name('admin.usermanagement');
+        Route::get('/coursemanagement', [CourseManagementController::class, 'index'])->name('admin.coursemanagement');
 
         Route::post('/admin/update-role', [AdminController::class, 'updateRole'])
             ->name('admin.update-role');
