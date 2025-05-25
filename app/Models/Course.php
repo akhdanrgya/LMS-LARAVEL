@@ -4,78 +4,115 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\CourseRating;
+use Illuminate\Support\Str; // Opsional, bisa buat helper slug jika tidak di controller
 
 class Course extends Model
 {
     use HasFactory;
 
-    // Field yang bisa diisi mass-assignment
     protected $fillable = [
-        'name',
+        'mentor_id',
+        'title',
+        'slug',
         'description',
-        'cover_photo',
+        'thumbnail_path',
     ];
 
     /**
-     * Relasi banyak ke banyak dengan User (Students)
+     * Boot a new Eloquent model instance.
+     * Otomatis bikin slug kalo title diisi dan slug kosong (opsional, bisa juga di controller)
      */
-    // app/Models/Course.php
-    public function enrollments()
-    {
-        return $this->hasMany(Enrollment::class);
-    }
+    // protected static function boot()
+    // {
+    //     parent::boot();
+    //     static::creating(function ($course) {
+    //         if (empty($course->slug)) {
+    //             $course->slug = Str::slug($course->title) . '-' . uniqid();
+    //         }
+    //     });
+    //     static::updating(function ($course) {
+    //         if ($course->isDirty('title') && empty($course->slug)) { // Atau jika mau slug selalu update saat title update
+    //             $course->slug = Str::slug($course->title) . '-' . $course->id; // pastikan unik
+    //         }
+    //     });
+    // }
 
-    // app/Models/Course.php
-    public function students()
-    {
-        return $this->belongsToMany(User::class, 'enrollments')
-            ->withPivot('completed')
-            ->withTimestamps();
-    }
+
     /**
-     * Relasi satu ke banyak dengan Materials
+     * Relasi one-to-many (inverse) ke User (Mentor yang mengajar course ini).
      */
-    public function materials()
-    {
-        return $this->hasMany(Material::class);
-    }
-
     public function mentor()
     {
         return $this->belongsTo(User::class, 'mentor_id');
     }
 
-    // Tambahkan accessor untuk cover photo URL
+    /**
+     * Relasi one-to-many ke Material.
+     */
+    public function materials()
+    {
+        return $this->hasMany(Material::class, 'course_id')->orderBy('order_sequence', 'asc'); // Urutkan materi
+    }
+
+    /**
+     * Relasi one-to-many ke Quiz.
+     */
+    public function quizzes()
+    {
+        return $this->hasMany(Quiz::class, 'course_id');
+    }
+
+    /**
+     * Relasi one-to-many ke Enrollment.
+     */
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class, 'course_id');
+    }
+
+    /**
+     * Relasi many-to-many ke User (Student yang terdaftar di course ini).
+     */
+    public function students()
+    {
+        return $this->belongsToMany(User::class, 'enrollments', 'course_id', 'student_id')
+                    ->withTimestamps()
+                    ->withPivot('completion_status', 'completed_at');
+    }
+
+    /**
+     * Relasi one-to-many ke CourseRating.
+     */
     public function ratings()
     {
-        return $this->hasMany(CourseRating::class);
+        return $this->hasMany(CourseRating::class, 'course_id');
     }
 
-    // Accessor untuk average rating
+    /**
+     * Accessor untuk rata-rata rating (opsional, tapi berguna).
+     */
     public function getAverageRatingAttribute()
     {
-        return $this->ratings()->avg('rating') ?? 0;
+        return $this->ratings()->avg('rating');
     }
 
-    // Accessor untuk format duration
-    public function getFormattedDurationAttribute()
+    /**
+     * Mendapatkan path URL untuk thumbnail.
+     */
+    public function getThumbnailUrlAttribute()
     {
-        $hours = floor($this->duration_minutes / 60);
-        $minutes = $this->duration_minutes % 60;
-
-        return $hours > 0
-            ? sprintf('%dh %02dm', $hours, $minutes)
-            : sprintf('%dm', $minutes);
+        if ($this->thumbnail_path) {
+            // return asset('storage/' . $this->thumbnail_path); // Pastikan sudah php artisan storage:link
+        }
+        return asset('images/default_course_thumbnail.png'); // Sediakan gambar default
     }
 
-    public function author()
+    /**
+     * Untuk Route Model Binding menggunakan slug daripada ID.
+     * Pastikan kolom 'slug' di tabel 'courses' itu unik.
+     */
+    public function getRouteKeyName()
     {
-        return $this->belongsTo(User::class, 'author_id');
-    }
-
-    public function getMaterialsCountAttribute()
-    {
-        return $this->materials_count ?? 0;
+        return 'slug';
     }
 }
