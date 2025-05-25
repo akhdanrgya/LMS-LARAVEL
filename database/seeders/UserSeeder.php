@@ -14,9 +14,9 @@ class UserSeeder extends Seeder
     {
         // 1. Buat Admin
         $admin = User::create([
-            'name' => 'Admin LMS',
-            'email' => 'admin@lms.test',
-            'password' => Hash::make('password'), // Ganti passwordnya nanti!
+            'name' => 'Admin',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('admin123'), // Ganti passwordnya nanti!
             'role' => 'admin',
             'email_verified_at' => now(),
         ]);
@@ -24,9 +24,9 @@ class UserSeeder extends Seeder
 
         // 2. Buat beberapa Mentor
         $mentor1 = User::create([
-            'name' => 'Mentor Budi',
-            'email' => 'budi.mentor@lms.test',
-            'password' => Hash::make('password'),
+            'name' => 'Akhdan',
+            'email' => 'akhdan@gmail.com',
+            'password' => Hash::make('akhdan123'),
             'role' => 'mentor',
             'email_verified_at' => now(),
         ]);
@@ -38,9 +38,9 @@ class UserSeeder extends Seeder
         ]);
 
         $mentor2 = User::create([
-            'name' => 'Mentor Ani',
-            'email' => 'ani.mentor@lms.test',
-            'password' => Hash::make('password'),
+            'name' => 'Arvia',
+            'email' => 'arvia@gmail.com',
+            'password' => Hash::make('arvia123'),
             'role' => 'mentor',
             'email_verified_at' => now(),
         ]);
@@ -52,9 +52,9 @@ class UserSeeder extends Seeder
 
         // 3. Buat beberapa Student
         $student1 = User::create([
-            'name' => 'Siswa Cici',
-            'email' => 'cici.student@lms.test',
-            'password' => Hash::make('password'),
+            'name' => 'Enrico',
+            'email' => 'enrico@gmail.com',
+            'password' => Hash::make('enrico123'),
             'role' => 'student',
             'email_verified_at' => now(),
         ]);
@@ -64,9 +64,9 @@ class UserSeeder extends Seeder
         ]);
 
         $student2 = User::create([
-            'name' => 'Siswa Dodi',
-            'email' => 'dodi.student@lms.test',
-            'password' => Hash::make('password'),
+            'name' => 'Nadya',
+            'email' => 'nadya@gmail.com',
+            'password' => Hash::make('nadya123'),
             'role' => 'student',
             'email_verified_at' => now(),
         ]);
