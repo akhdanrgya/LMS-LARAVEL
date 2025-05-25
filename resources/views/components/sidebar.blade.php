@@ -4,14 +4,14 @@
   <p class="text-xs text-[#4c5a73]">OVERVIEW</p>
 
   @auth
-  {{-- Home semua role bisa lihat --}}
-  @if(auth()->user()->role == 'student')
-  <a href="{{ route('dashboard') }}"
+    {{-- Home semua role bisa lihat --}}
+    @if(auth()->user()->role == 'student')
+    <a href="{{ route('dashboard') }}"
     class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
     <i class="fas fa-home text-[#4c5a73] w-4"></i>
     <p class="text-sm text-[#4c5a73]">Home</p>
-  </a>
-  @endif
+    </a>
+    @endif
 
     @if(auth()->user()->role == 'student')
     <a href="{{ route('dashboard.courses', auth()->user()) }}"
@@ -32,21 +32,18 @@
     @endif
 
     @if(auth()->user()->role == 'mentor')
-    <a href="{{ route('mentor.index')}}"
+    <a href="{{ route('mentor.dashboard')}}"
     class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
     <i class="fas fa-person-chalkboard text-[#4c5a73] w-4"></i>
     <p class="text-sm text-[#4c5a73]">Mentor Dashboard</p>
     </a>
-    <a href="{{ route('courses.create') }}"
+    <a href="{{route('mentor.courses.index')}}"
     class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
-    <i class="fas fa-plus text-[#4c5a73] w-4"></i>
-    <p class="text-sm text-[#4c5a73]">Create Course</p>
-    </a>
-    <a href="{{route('mentor.managecourse')}}" class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
     <i class="fas fa-book text-[#4c5a73] w-4"></i>
     <p class="text-sm text-[#4c5a73]">Manage Courses</p>
     </a>
-    <a href="{{route('mentor.managematerial')}}" class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
+    <a href=""
+    class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
     <i class="fas fa-file-alt text-[#4c5a73] w-4"></i>
     <p class="text-sm text-[#4c5a73]">Manage Materials</p>
     </a>
@@ -59,11 +56,13 @@
     <p class="text-sm text-[#4c5a73]">Admin Dashboard</p>
     </a>
     <p class="text-xs text-[#4c5a73]">ADMIN MENU</p>
-    <a href="{{route('admin.users.index')}}" class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
+    <a href="{{route('admin.users.index')}}"
+    class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
     <i class="fas fa-users text-[#4c5a73] w-4"></i>
     <p class="text-sm text-[#4c5a73]">User Management</p>
     </a>
-    <a href="{{route('admin.courses.index')}}" class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
+    <a href="{{route('admin.courses.index')}}"
+    class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
     <i class="fas fa-chalkboard text-[#4c5a73] w-4"></i>
     <p class="text-sm text-[#4c5a73]">Course Management</p>
     </a>
@@ -87,4 +86,15 @@
     <i class="fas fa-skull text-[#4c5a73] w-4"></i>
     <p class="text-sm text-[#4c5a73]">Nca</p>
   </a>
+
+  <div class="mt-auto pt-4 border-t border-gray-300"> {{-- mt-auto buat dorong ke bawah kalo sidebar flex column --}}
+    <form method="POST" action="{{ route('logout') }}">
+      @csrf {{-- Jangan lupa CSRF token! --}}
+      <button type="submit"
+        class="flex items-center gap-2.5 w-full cursor-pointer px-2 py-2 rounded text-sm text-red-600 hover:bg-red-100 hover:text-red-700">
+        <i class="fas fa-sign-out-alt text-red-600 w-4"></i>
+        <p>Logout</p>
+      </button>
+    </form>
+  </div>
 </div>

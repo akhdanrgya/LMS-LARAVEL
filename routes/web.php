@@ -73,10 +73,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 // ------------------------- MENTOR ROUTES -------------------------
 Route::middleware(['auth', 'role:mentor'])->prefix('mentor')->name('mentor.')->group(function () {
     // Kalo mau ada dashboard khusus mentor, bisa di sini:
-    // Route::get('/dashboard', [MentorDashboardController::class, 'index'])->name('dashboard'); // Pastikan MentorDashboardController ada method index
+    Route::get('/dashboard', [App\Http\Controllers\Mentor\DashboardController::class, 'index'])->name('dashboard'); // Pastikan MentorDashboardController ada method index
 
     // Resourceful route untuk Course milik Mentor (ini udah dari kode lo, bagus!)
-    // Route::resource('courses', MentorCourseController::class);
+    Route::resource('courses', MentorCourseController::class);
     
     // Contoh route buat kelola materi (Nanti kalo udah ada MentorMaterialController)
     // Route::resource('courses/{course}/materials', MentorMaterialController::class);
