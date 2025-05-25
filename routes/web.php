@@ -13,7 +13,7 @@ use App\Http\Controllers\CoursePageController;  // Untuk halaman publik daftar &
 // Controller Admin
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
-// use App\Http\Controllers\Admin\CourseManagementController as AdminCourseManagementController; // Nanti kalo ada
+use App\Http\Controllers\Admin\CourseManagementController as AdminCourseManagementController;
 
 // Controller Mentor
 use App\Http\Controllers\Mentor\DashboardController as MentorDashboardController; // Kalo mau ada dashboard mentor khusus
@@ -59,11 +59,15 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->midd
 // ------------------------- ADMIN ROUTES -------------------------
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::resource('users', AdminUserController::class)->except(['show']);
     
-    // User Management oleh Admin
-    Route::resource('users', AdminUserController::class)->except(['show']); 
-    // method show() di-exclude karena biasanya gak perlu halaman detail khusus user buat admin
-
+    // Course Management oleh Admin
+    Route::get('/courses', [AdminCourseManagementController::class, 'index'])->name('courses.index');
+    Route::get('/courses/{course}/edit', [AdminCourseManagementController::class, 'edit'])->name('courses.edit');
+    Route::put('/courses/{course}', [AdminCourseManagementController::class, 'update'])->name('courses.update');
+    Route::delete('/courses/{course}', [AdminCourseManagementController::class, 'destroy'])->name('courses.destroy');
+    // Opsional: Route buat toggle status
+    // Route::patch('/courses-management/{course}/status/{newStatus}', [AdminCourseManagementController::class, 'toggleStatus'])->name('courses.manage.toggleStatus');
 });
 
 // ------------------------- MENTOR ROUTES -------------------------

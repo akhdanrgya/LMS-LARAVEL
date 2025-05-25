@@ -63,7 +63,7 @@
     <i class="fas fa-users text-[#4c5a73] w-4"></i>
     <p class="text-sm text-[#4c5a73]">User Management</p>
     </a>
-    <a href="" class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
+    <a href="{{route('admin.courses.index')}}" class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
     <i class="fas fa-chalkboard text-[#4c5a73] w-4"></i>
     <p class="text-sm text-[#4c5a73]">Course Management</p>
     </a>
