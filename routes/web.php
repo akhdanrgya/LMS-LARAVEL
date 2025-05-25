@@ -53,8 +53,8 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->midd
 // Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('auth');
 
 // Rute Publik untuk Melihat Course
-// Route::get('/courses', [CoursePageController::class, 'index'])->name('courses.index');
-// Route::get('/courses/{course:slug}', [CoursePageController::class, 'show'])->name('courses.show'); // Pake slug buat SEO friendly
+Route::get('/courses', [CoursePageController::class, 'index'])->name('courses.index');
+Route::get('/courses/{course:slug}', [CoursePageController::class, 'show'])->name('courses.show'); // Pake slug buat SEO friendly
 
 // ------------------------- ADMIN ROUTES -------------------------
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -84,13 +84,13 @@ Route::middleware(['auth', 'role:mentor'])->prefix('mentor')->name('mentor.')->g
 
 // ------------------------- STUDENT ROUTES -------------------------
 Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')->group(function () {
-    // Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('dashboard'); // Pastikan StudentDashboardController ada method index
+    Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('dashboard'); // Pastikan StudentDashboardController ada method index
     
     // Halaman buat liat course yang udah di-enroll student
-    // Route::get('/my-courses', [StudentMyCoursesController::class, 'index'])->name('my-courses.index');
+    Route::get('/my-courses', [StudentMyCoursesController::class, 'index'])->name('my-courses.index');
     
     // Proses enroll ke course
-    // Route::post('/enroll/{course}', [StudentEnrollmentController::class, 'store'])->name('courses.enroll');
+    Route::post('/enroll/{course}', [StudentEnrollmentController::class, 'store'])->name('courses.enroll');
     
     // Contoh route buat ngerjain quiz (Nanti kalo udah ada StudentQuizAttemptController)
     // Route::get('/courses/{course}/quiz/{quiz}/attempt', [StudentQuizAttemptController::class, 'create'])->name('quiz.attempt');
