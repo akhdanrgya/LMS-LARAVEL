@@ -10,18 +10,27 @@ class Material extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'description',
-        'file_path',
         'course_id',
-        'order',
+        'title',
+        'content_type',
+        'content',
+        'order_sequence', // sebelumnya 'order' di migrasi, saya ganti jadi 'order_sequence' biar lebih jelas & gak bentrok keyword SQL
     ];
 
     /**
-     * Relasi banyak ke satu dengan Course
+     * Relasi one-to-many (inverse) ke Course.
      */
     public function course()
     {
-        return $this->belongsTo(Course::class);
+        return $this->belongsTo(Course::class, 'course_id');
+    }
+
+    /**
+     * Jika sebuah materi bisa langsung berupa quiz (Quiz punya material_id).
+     * Relasi one-to-one ke Quiz.
+     */
+    public function linkedQuiz() // Nama bisa disesuaikan
+    {
+        return $this->hasOne(Quiz::class, 'material_id');
     }
 }
