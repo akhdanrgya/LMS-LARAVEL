@@ -16,6 +16,11 @@
     @if(auth()->user()->role == 'student')
     <a href="{{ route('dashboard.courses', auth()->user()) }}"
     class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
+    <i class="fas fa-chart-line text-[#4c5a73] w-4"></i>
+    <p class="text-sm text-[#4c5a73]">Overview</p>
+    </a>
+    <a href="{{ route('dashboard.courses', auth()->user()) }}"
+    class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
     <i class="fas fa-chalkboard-user text-[#4c5a73] w-4"></i>
     <p class="text-sm text-[#4c5a73]">My Courses</p>
     </a>
@@ -23,16 +28,6 @@
     class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
     <i class="fas fa-chalkboard text-[#4c5a73] w-4"></i>
     <p class="text-sm text-[#4c5a73]">All Courses</p>
-    </a>
-    <a href="{{ route('dashboard.task') }}"
-    class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
-    <i class="fas fa-list-check text-[#4c5a73] w-4"></i>
-    <p class="text-sm text-[#4c5a73]">Task</p>
-    </a>
-    <a href="{{ route('dashboard.forum') }}"
-    class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
-    <i class="fas fa-users text-[#4c5a73] w-4"></i>
-    <p class="text-sm text-[#4c5a73]">Forum</p>
     </a>
     @endif
 
