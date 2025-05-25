@@ -24,6 +24,7 @@ use App\Http\Controllers\Mentor\CourseController as MentorCourseController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
 use App\Http\Controllers\Student\MyCoursesController as StudentMyCoursesController;
 use App\Http\Controllers\Student\EnrollmentController as StudentEnrollmentController;
+use App\Http\Controllers\Student\OverviewController as StudentOverviewController;
 // use App\Http\Controllers\Student\QuizAttemptController as StudentQuizAttemptController; // Nanti kalo ada
 
 
@@ -85,6 +86,7 @@ Route::middleware(['auth', 'role:mentor'])->prefix('mentor')->name('mentor.')->g
 // ------------------------- STUDENT ROUTES -------------------------
 Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')->group(function () {
     Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('dashboard'); // Pastikan StudentDashboardController ada method index
+    Route::get('/overview', [StudentOverviewController::class, 'index'])->name('overview');
     
     // Halaman buat liat course yang udah di-enroll student
     Route::get('/my-courses', [StudentMyCoursesController::class, 'index'])->name('my-courses.index');
