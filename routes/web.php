@@ -1,91 +1,94 @@
 <?php
 
-// use Illuminate\Support\Facades\Route;
-// use App\Http\Controllers\AuthController;
-// use App\Http\Controllers\DashboardController;
-// use App\Http\Controllers\CourseController;
-// use App\Http\Controllers\MaterialController;
-// use App\Http\Controllers\AdminController;
-// use App\Http\Controllers\MentorController;
-// use App\Http\Controllers\UserManagementController;
-// use App\Http\Controllers\CourseManagementController;
+use Illuminate\Support\Facades\Route;
 
+// Controller untuk Otentikasi
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\LoginController;
 
-// Route::middleware('auth')->group(function () {
-    //     Route::post('/logout', [AuthController::class, 'logout'])->name('logout'); // logout action
-    
-    
-    //     Route::middleware('role:mentor,student')->group(function () {
-        //         Route::get('/', [DashboardController::class, 'index'])->name('dashboard'); // view home/dashboard
-        //         Route::get('/courses', [CourseController::class, 'fetchAllCourses'])->name('courses.index');
-        //         Route::get('/{user:name}/courses', [DashboardController::class, 'courses'])->name('dashboard.courses'); // list courses view
-        //         Route::get('/task', [DashboardController::class, 'task'])->name('dashboard.task'); // task page
-        //         Route::get('/forum', [DashboardController::class, 'forum'])->name('dashboard.forum'); // forum page
-        
-        //         Route::middleware('role:mentor')->group(function () {
-            //             Route::get('/courses/create', [CourseController::class, 'viewCreate'])->name('courses.create'); // create course form
-            //             Route::get('/mentor', [MentorController::class, 'index'])->name('mentor.index'); // create course form
-            //             Route::get('/courses/{course}/materials/create', [MaterialController::class, 'create'])->name('materials.create'); // create material form
-            //             Route::get('/managecourse', [MentorController::class, 'managecourse'])->name(name: 'mentor.managecourse'); // create material form
-            //             Route::get('/managematerial', [MentorController::class, 'managematerial'])->name(name: 'mentor.managematerial'); // create material form
-            //             Route::post('/courses', [CourseController::class, 'store'])->name('courses.store');
-            //         });
-            
-            //         Route::get('/mycourses', [CourseController::class, 'userCourses'])->name('dashboard.index');
-//         Route::get('/courses/{course:name}', [CourseController::class, 'show'])->name('courses.show'); // course detail
-//         Route::post('/courses/{course}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
-//         Route::get('/courses/{course}/materials', [MaterialController::class, 'index'])->name('materials.index'); // list materials
+// Controller Publik & Home
+use App\Http\Controllers\HomeController;         // Untuk halaman /home generik
+use App\Http\Controllers\CoursePageController;  // Untuk halaman publik daftar & detail course
 
-//     });
+// Controller Admin
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+// use App\Http\Controllers\Admin\CourseManagementController as AdminCourseManagementController; // Nanti kalo ada
 
-//     // Mentor routes to view pages
-
-//     // admin route
-//     Route::middleware('role:admin')->group(function () {
-    //         Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
-    //         Route::get('/usermanagement', [UserManagementController::class, 'index'])->name('admin.usermanagement');
-    //         Route::get('/coursemanagement', [CourseManagementController::class, 'index'])->name('admin.coursemanagement');
-    
-    //         Route::post('/admin/update-role', [AdminController::class, 'updateRole'])
-    //             ->name('admin.update-role');
-    //     });
-    // });
-    
-    // Route::middleware('guest')->group(function () {
-        //     Route::get('/login', [AuthController::class, 'showLogin'])->name('login'); // login page
-        //     Route::get('/register', [AuthController::class, 'showRegister'])->name('register'); // register page
-        
-        //     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-        //     Route::post('/register', [AuthController::class, 'register'])->name('register.post');
-        // });
-        
-        
+// Controller Mentor
+use App\Http\Controllers\Mentor\DashboardController as MentorDashboardController; // Kalo mau ada dashboard mentor khusus
 use App\Http\Controllers\Mentor\CourseController as MentorCourseController;
-use App\Http\Controllers\Auth\RegisterController; // Import RegisterController
-use App\Http\Controllers\Auth\LoginController;   // Import LoginController
+// use App\Http\Controllers\Mentor\MaterialController as MentorMaterialController; // Nanti kalo ada
 
-// Route untuk menampilkan form
-Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register')->middleware('guest'); // Cuma tamu yang bisa akses
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');    // Cuma tamu yang bisa akses
-
-Route::post('/register', [RegisterController::class, 'register'])->middleware('guest');
-Route::post('/login', [LoginController::class, 'login'])->middleware('guest');
-
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth'); // Cuma yang udah login bisa logout
+// Controller Student
+use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
+use App\Http\Controllers\Student\MyCoursesController as StudentMyCoursesController;
+use App\Http\Controllers\Student\EnrollmentController as StudentEnrollmentController;
+// use App\Http\Controllers\Student\QuizAttemptController as StudentQuizAttemptController; // Nanti kalo ada
 
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
 
+// Halaman Utama (Welcome/Landing Page)
+Route::get('/', function () {
+    return view('welcome'); // Atau view landing page lo
+})->name('welcome');
+
+// Rute Otentikasi (Login, Register, Logout)
+// Ini udah oke dari kode lo, gue tambahin name buat POST biar konsisten (opsional)
+Route::middleware('guest')->group(function () {
+    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [RegisterController::class, 'register'])->name('register.submit'); // Opsional name
+
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'login'])->name('login.submit'); // Opsional name
+});
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
+
+// Halaman Home Umum (Setelah Login jika tidak ada redirect spesifik role)
+// Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('auth');
+
+// Rute Publik untuk Melihat Course
+// Route::get('/courses', [CoursePageController::class, 'index'])->name('courses.index');
+// Route::get('/courses/{course:slug}', [CoursePageController::class, 'show'])->name('courses.show'); // Pake slug buat SEO friendly
+
+// ------------------------- ADMIN ROUTES -------------------------
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    
+    // User Management oleh Admin
+    Route::resource('users', AdminUserController::class)->except(['show']); 
+    // method show() di-exclude karena biasanya gak perlu halaman detail khusus user buat admin
+
+});
+
+// ------------------------- MENTOR ROUTES -------------------------
 Route::middleware(['auth', 'role:mentor'])->prefix('mentor')->name('mentor.')->group(function () {
-    
-    // Dashboard Mentor (misal)
-    // Route::get('/dashboard', [MentorDashboardController::class, 'index'])->name('dashboard');
+    // Kalo mau ada dashboard khusus mentor, bisa di sini:
+    // Route::get('/dashboard', [MentorDashboardController::class, 'index'])->name('dashboard'); // Pastikan MentorDashboardController ada method index
 
-    // Resourceful route untuk Course milik Mentor
-    // Ini otomatis bikin route buat index, create, store, show, edit, update, destroy
-    Route::resource('courses', MentorCourseController::class);
+    // Resourceful route untuk Course milik Mentor (ini udah dari kode lo, bagus!)
+    // Route::resource('courses', MentorCourseController::class);
     
-    // Kalo ada route spesifik lain buat mentor, tambahin di sini
-    // Misalnya buat kelola materi atau quiz di dalam course:
-    // Route::get('/courses/{course}/materials', [MentorMaterialController::class, 'index'])->name('courses.materials.index');
+    // Contoh route buat kelola materi (Nanti kalo udah ada MentorMaterialController)
+    // Route::resource('courses/{course}/materials', MentorMaterialController::class);
+});
 
+// ------------------------- STUDENT ROUTES -------------------------
+Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')->group(function () {
+    // Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('dashboard'); // Pastikan StudentDashboardController ada method index
+    
+    // Halaman buat liat course yang udah di-enroll student
+    // Route::get('/my-courses', [StudentMyCoursesController::class, 'index'])->name('my-courses.index');
+    
+    // Proses enroll ke course
+    // Route::post('/enroll/{course}', [StudentEnrollmentController::class, 'store'])->name('courses.enroll');
+    
+    // Contoh route buat ngerjain quiz (Nanti kalo udah ada StudentQuizAttemptController)
+    // Route::get('/courses/{course}/quiz/{quiz}/attempt', [StudentQuizAttemptController::class, 'create'])->name('quiz.attempt');
+    // Route::post('/courses/{course}/quiz/{quiz}/attempt', [StudentQuizAttemptController::class, 'store']);
 });
