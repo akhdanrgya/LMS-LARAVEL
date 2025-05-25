@@ -4,31 +4,25 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMaterialsTable extends Migration
+return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
         Schema::create('materials', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('course_id')->constrained('courses')->onDelete('cascade'); // Relasi ke table courses
+            $table->unsignedBigInteger('course_id');
             $table->string('title');
+            $table->enum('content_type', ['text', 'video_link', 'file_path', 'quiz_link']);
             $table->text('content');
+            $table->integer('order_sequence')->default(0);
             $table->timestamps();
+
+            $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('materials');
     }
-}
+};
