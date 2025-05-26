@@ -34,9 +34,9 @@ use App\Http\Controllers\Student\OverviewController as StudentOverviewController
 |--------------------------------------------------------------------------
 */
 
-// Halaman Utama (Welcome/Landing Page)
 Route::get('/', function () {
-    return view('welcome'); // Atau view landing page lo
+    // return view('welcome'); // Jika masih ada landing page sederhana sebelum login
+    return redirect()->route('login'); // Atau langsung redirect ke login
 })->name('welcome');
 
 // Rute Otentikasi (Login, Register, Logout)
@@ -53,9 +53,15 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->midd
 // Halaman Home Umum (Setelah Login jika tidak ada redirect spesifik role)
 // Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('auth');
 
-// Rute Publik untuk Melihat Course
-Route::get('/courses', [CoursePageController::class, 'index'])->name('courses.index');
-Route::get('/courses/{course:slug}', [CoursePageController::class, 'show'])->name('courses.show'); // Pake slug buat SEO friendly
+// RUTE-RUTE YANG MEMBUTUHKAN OTENTIKASI (SEMUA ROLE BISA AKSES AWALNYA, NANTI DIHANDLE ROLE DI DALAM)
+Route::middleware(['auth'])->group(function () {
+    // Halaman "All Courses" untuk semua user yang sudah login
+    Route::get('/courses', [CoursePageController::class, 'index'])->name('courses.index');
+    Route::get('/courses/{course:slug}', [CoursePageController::class, 'show'])->name('courses.show');
+
+    // Halaman /home sekarang tidak ada, redirect dihandle oleh LoginController & RegisterController
+    // Dan oleh RedirectIfAuthenticated middleware
+});
 
 // ------------------------- ADMIN ROUTES -------------------------
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {

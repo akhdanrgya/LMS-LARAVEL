@@ -44,7 +44,7 @@ class LoginController extends Controller
                 return redirect()->intended(route('student.dashboard'));
             }
             
-            return redirect()->intended('/dashboard'); // Fallback
+            return redirect()->intended('/'); // Fallback
         }
 
         // 4. Kalo Gagal Login
