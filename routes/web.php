@@ -18,7 +18,7 @@ use App\Http\Controllers\Admin\CourseManagementController as AdminCourseManageme
 // Controller Mentor
 use App\Http\Controllers\Mentor\DashboardController as MentorDashboardController; // Kalo mau ada dashboard mentor khusus
 use App\Http\Controllers\Mentor\CourseController as MentorCourseController;
-// use App\Http\Controllers\Mentor\MaterialController as MentorMaterialController; // Nanti kalo ada
+use App\Http\Controllers\Mentor\MaterialController as MentorMaterialController; // Nanti kalo ada
 
 // Controller Student
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
@@ -67,7 +67,7 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::resource('users', AdminUserController::class)->except(['show']);
-    
+
     // Course Management oleh Admin
     Route::get('/courses', [AdminCourseManagementController::class, 'index'])->name('courses.index');
     Route::get('/courses/{course}/edit', [AdminCourseManagementController::class, 'edit'])->name('courses.edit');
@@ -79,27 +79,31 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
 // ------------------------- MENTOR ROUTES -------------------------
 Route::middleware(['auth', 'role:mentor'])->prefix('mentor')->name('mentor.')->group(function () {
-    // Kalo mau ada dashboard khusus mentor, bisa di sini:
-    Route::get('/dashboard', [App\Http\Controllers\Mentor\DashboardController::class, 'index'])->name('dashboard'); // Pastikan MentorDashboardController ada method index
 
-    // Resourceful route untuk Course milik Mentor (ini udah dari kode lo, bagus!)
+    // 1. Dashboard Mentor
+    Route::get('/dashboard', [MentorDashboardController::class, 'index'])->name('dashboard');
+
+    // 2. Resourceful route untuk Course milik Mentor
     Route::resource('courses', MentorCourseController::class);
-    
-    // Contoh route buat kelola materi (Nanti kalo udah ada MentorMaterialController)
-    // Route::resource('courses/{course}/materials', MentorMaterialController::class);
+
+    // 3. Resourceful route untuk Materi di dalam Course (NESTED)
+    // INI YANG PERLU LO TAMBAHKAN:
+    Route::resource('courses.materials', MentorMaterialController::class)
+        ->except(['show']); // Kita exclude 'show' karena mungkin detail materi langsung di-view atau edit
+
 });
 
 // ------------------------- STUDENT ROUTES -------------------------
 Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')->group(function () {
     Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('dashboard'); // Pastikan StudentDashboardController ada method index
     Route::get('/overview', [StudentOverviewController::class, 'index'])->name('overview');
-    
+
     // Halaman buat liat course yang udah di-enroll student
     Route::get('/my-courses', [StudentMyCoursesController::class, 'index'])->name('my-courses.index');
-    
+
     // Proses enroll ke course
     Route::post('/enroll/{course}', [StudentEnrollmentController::class, 'store'])->name('courses.enroll');
-    
+
     // Contoh route buat ngerjain quiz (Nanti kalo udah ada StudentQuizAttemptController)
     // Route::get('/courses/{course}/quiz/{quiz}/attempt', [StudentQuizAttemptController::class, 'create'])->name('quiz.attempt');
     // Route::post('/courses/{course}/quiz/{quiz}/attempt', [StudentQuizAttemptController::class, 'store']);
