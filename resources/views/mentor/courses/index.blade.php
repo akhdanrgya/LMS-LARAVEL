@@ -72,6 +72,12 @@
                                             title="Kelola Materi & Quiz">
                                             <i class="fas fa-list-ul"></i>
                                         </a>
+
+                                        <a href="{{ route('mentor.courses.quizzes.index', $course->slug) }}"
+                                            class="w-8 h-8 rounded bg-purple-500 hover:bg-purple-600 text-white flex items-center justify-center transform hover:scale-110 transition-transform duration-300"
+                                            title="Kelola Quiz">
+                                            <i class="fas fa-puzzle-piece"></i> {{-- Ikon untuk quiz --}}
+                                        </a>
                                         {{-- Tombol Edit Course --}}
                                         <a href="{{ route('mentor.courses.edit', $course->slug) }}"
                                             class="w-8 h-8 rounded bg-yellow-500 text-white flex items-center justify-center transform hover:scale-110 transition-transform duration-300"

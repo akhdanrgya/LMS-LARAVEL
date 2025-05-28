@@ -91,6 +91,9 @@ Route::middleware(['auth', 'role:mentor'])->prefix('mentor')->name('mentor.')->g
     Route::resource('courses.materials', MentorMaterialController::class)
         ->except(['show']); // Kita exclude 'show' karena mungkin detail materi langsung di-view atau edit
 
+    Route::resource('courses.quizzes', App\Http\Controllers\Mentor\QuizController::class)
+        ->except(['show']); // Method show bisa kita custom nanti buat nampilin detail quiz + daftar pertanyaan
+
 });
 
 // ------------------------- STUDENT ROUTES -------------------------
