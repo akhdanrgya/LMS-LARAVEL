@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Mentor;
 
 use App\Http\Controllers\Controller;
-use App\Models\Course; // Untuk mengambil data course parent
+use App\Models\Course;
 use App\Models\Quiz;
-use Illuminate\Http\Request; // Nanti bisa ganti dengan FormRequest
 use Illuminate\Support\Facades\Auth;
+// Import Form Requests
+use App\Http\Requests\Mentor\StoreQuizRequest;
+use App\Http\Requests\Mentor\UpdateQuizRequest;
 
 class QuizController extends Controller
 {
@@ -26,7 +28,7 @@ class QuizController extends Controller
     public function index(Course $course)
     {
         $this->authorizeMentor($course);
-        $quizzes = $course->quizzes()->latest()->paginate(10); // Ambil quiz milik course ini
+        $quizzes = $course->quizzes()->withCount('questions')->latest()->paginate(10); // Tambah withCount buat jumlah soal
         return view('mentor.quizzes.index', compact('course', 'quizzes'));
     }
 
@@ -42,30 +44,62 @@ class QuizController extends Controller
     /**
      * Menyimpan quiz baru ke database.
      */
-    public function store(Request $request, Course $course) // Nanti ganti Request dengan StoreQuizRequest
+    public function store(StoreQuizRequest $request, Course $course)
     {
-        $this->authorizeMentor($course);
+        // Otorisasi sudah dihandle oleh StoreQuizRequest->authorize()
+        $validatedData = $request->validated();
+        $quiz = $course->quizzes()->create($validatedData);
 
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'duration_minutes' => 'nullable|integer|min:1',
-            // 'material_id' => 'nullable|exists:materials,id', // Jika quiz bisa dikaitkan ke materi tertentu
-        ]);
-
-        $quiz = $course->quizzes()->create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'duration_minutes' => $request->duration_minutes,
-            // 'material_id' => $request->material_id, // Jika ada
-        ]);
-
-        // Setelah quiz dibuat, biasanya redirect ke halaman untuk nambah pertanyaan di quiz itu
-        // atau ke daftar quiz course ini. Untuk sekarang, ke daftar quiz dulu.
         return redirect()->route('mentor.courses.quizzes.index', $course->slug)
-                         ->with('success', 'Quiz "' . $quiz->title . '" berhasil dibuat! Sekarang tambahkan pertanyaan.');
+                         ->with('success', 'Quiz "' . $quiz->title . '" berhasil dibuat! Selanjutnya, tambahkan pertanyaan untuk quiz ini.');
     }
 
-    // Method show(Course $course, Quiz $quiz), edit(...), update(...), destroy(...) akan kita detailkan nanti
-    // ...
+    /**
+     * Menampilkan form untuk mengedit quiz.
+     */
+    public function edit(Course $course, Quiz $quiz)
+    {
+        $this->authorizeMentor($course);
+        if ($quiz->course_id !== $course->id) {
+            abort(404, 'Quiz tidak ditemukan pada course ini.');
+        }
+        return view('mentor.quizzes.edit', compact('course', 'quiz'));
+    }
+
+    /**
+     * Update quiz yang ada di database.
+     */
+    public function update(UpdateQuizRequest $request, Course $course, Quiz $quiz)
+    {
+        // Otorisasi sudah dihandle oleh UpdateQuizRequest->authorize()
+        $validatedData = $request->validated();
+        $quiz->update($validatedData);
+
+        return redirect()->route('mentor.courses.quizzes.index', $course->slug)
+                         ->with('success', 'Quiz "' . $quiz->title . '" berhasil diupdate.');
+    }
+
+    /**
+     * Menghapus quiz dari database.
+     */
+    public function destroy(Course $course, Quiz $quiz)
+    {
+        // Otorisasi dasar
+        $this->authorizeMentor($course);
+        if ($quiz->course_id !== $course->id) {
+            abort(404, 'Quiz tidak ditemukan pada course ini untuk dihapus.');
+        }
+
+        $quizTitle = $quiz->title;
+
+        // Menghapus quiz.
+        // Pertanyaan (questions) dan percobaan quiz oleh student (student_quiz_attempts)
+        // akan otomatis terhapus jika foreign key di tabel-tabel tersebut
+        // ke 'quizzes' sudah di-set onDelete('cascade') pada saat migrasi.
+        // (Di migrasi kita, ini sudah di-set cascade, jadi aman!)
+        $quiz->delete();
+
+        return redirect()->route('mentor.courses.quizzes.index', $course->slug)
+                         ->with('success', 'Quiz "' . $quizTitle . '" beserta semua pertanyaannya berhasil dihapus.');
+    }
 }
