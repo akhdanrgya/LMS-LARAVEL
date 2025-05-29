@@ -94,6 +94,10 @@ Route::middleware(['auth', 'role:mentor'])->prefix('mentor')->name('mentor.')->g
     Route::resource('courses.quizzes', App\Http\Controllers\Mentor\QuizController::class)
         ->except(['show']); // Method show bisa kita custom nanti buat nampilin detail quiz + daftar pertanyaan
 
+    Route::resource('courses.quizzes.questions', App\Http\Controllers\Mentor\QuestionController::class)
+        ->except(['show']) // Kita mungkin tidak pakai show() terpisah untuk question
+        ->scoped(); // Penting untuk nested model binding yang benar (Question harus milik Quiz, Quiz harus milik Course)
+
 });
 
 // ------------------------- STUDENT ROUTES -------------------------
