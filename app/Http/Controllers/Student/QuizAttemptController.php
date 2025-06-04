@@ -143,13 +143,37 @@ class QuizAttemptController extends Controller
 
             DB::commit();
 
-            return redirect()->route('student.dashboard') 
-                             ->with('success', 'Quiz "' . $quiz->title . '" berhasil disubmit! Skor Anda: ' . $totalScoreFromThisQuiz . '/' . $totalPointsPossible . '. Total skor Anda sekarang: ' . ($studentProfile->total_score ?? 'N/A'));
-
+            return redirect()->route('student.quiz.attempt.result', $attempt->id)
+                ->with('success', 'Quiz "' . $quiz->title . '" berhasil disubmit!');
+                
         } catch (\Exception $e) {
             DB::rollBack();
             \Illuminate\Support\Facades\Log::error('Error submitting quiz for attempt ID ' . $attempt->id . ': ' . $e->getMessage());
             return redirect()->back()->with('error', 'Terjadi kesalahan saat submit quiz. Silakan coba lagi.');
         }
+    }
+
+    public function showResult(StudentQuizAttempt $attempt) // Route Model Binding untuk $attempt
+    {
+        $student = Auth::user();
+
+        // 1. Otorisasi: Pastikan attempt ini milik student yang login
+        // dan sudah disubmit.
+        if ($attempt->student_id !== $student->id || $attempt->submitted_at === null) {
+            return redirect()->route('student.dashboard')->with('error', 'Hasil quiz tidak ditemukan atau belum selesai dikerjakan.');
+        }
+
+        // 2. Eager load relasi yang dibutuhkan untuk nampilin detail
+        $attempt->load([
+            'quiz.course', // Ambil quiz dan course-nya
+            'quiz.questions.answerOptions', // Ambil pertanyaan quiz & semua pilihan jawabannya
+            'answers.question.answerOptions', // Ambil jawaban student, pertanyaan terkait, & semua pilihan jawabannya
+        ]);
+        
+        // Atau bisa juga:
+        // $quiz = $attempt->quiz->load(['questions.answerOptions', 'course']);
+        // $studentAnswers = $attempt->answers()->with(['question.answerOptions'])->get()->keyBy('question_id');
+
+        return view('student.quizzes.result', compact('attempt'));
     }
 }

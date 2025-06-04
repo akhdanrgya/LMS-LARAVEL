@@ -122,4 +122,9 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')
     // Menyimpan/submit jawaban quiz
     Route::post('/courses/{course}/quizzes/{quiz}/attempts/{attempt}/submit', [StudentQuizAttemptController::class, 'submitAttempt'])
         ->name('quiz.attempt.submit');
+
+        // --- RUTE UNTUK MELIHAT HASIL QUIZ ---
+    // {attempt} akan di-resolve pake Route Model Binding (ID attempt)
+    Route::get('/my-attempts/{attempt}/result', [StudentQuizAttemptController::class, 'showResult'])
+         ->name('quiz.attempt.result');
 });
