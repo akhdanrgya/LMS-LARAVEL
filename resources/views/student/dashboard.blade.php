@@ -89,7 +89,7 @@
         {{-- @endif --}}
     </div>
     @empty
-    <div class="bg-white p-6 rounded-[30px] text-center">
+    <div class="p-6 text-center">
         <p class="text-gray-600">Timeline Anda kosong untuk saat ini.</p>
     </div>
     @endforelse
@@ -145,7 +145,7 @@
                 </div>
             </div>
             @empty
-            <div class="bg-white p-6 rounded-lg text-center">
+            <div class="p-6 text-center w-full">
                 <p class="text-gray-600">Anda belum terdaftar di course manapun.</p>
                 <a href="{{ route('courses.index') }}" class="text-indigo-600 hover:underline mt-2 inline-block">Jelajahi Semua Course &rarr;</a>
     </div>
@@ -155,55 +155,59 @@
 
   {{-- COURSES (General Listing) --}}
   <div class="flex flex-col justify-start items-start self-stretch flex-grow-0 flex-shrink-0 w-full relative gap-10 mb-4">
-      <p class="self-stretch w-full text-xl text-left text-[#4c5a73] mt-6">COURSES</p>
-      <div class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          @forelse ($allAvailableCourses as $course)
-          <div class="flex flex-col justify-center items-center w-full h-auto rounded-[30px] bg-white" style="box-shadow: 0px 4px 11px 0 rgba(0,0,0,0.25);">
-            {{-- Bagian gambar dengan gradient dari inspect element lo --}}
-            <div class="flex flex-col justify-start items-start self-stretch h-[187px] relative p-6 rounded-t-[30px]"
-        style="">
-        <a href="{{ route('courses.show', $course->slug) }}">
-            @if($course->thumbnail_path)
-            {{-- Idealnya gambar thumbnail, tapi karena ada SVG Python, kita coba tampilkan itu.
-                Ini akan jadi kompleks jika SVG harus dinamis per course.
-                Untuk sekarang, gue pake placeholder atau SVG Python statis jika ada.
-                SVG Python yang lo kasih itu sangat besar, lebih baik jadi image atau komponen terpisah.
-                Kita asumsikan ada $course->logo_svg atau $course->thumbnail_url.
-                --}}
-                <img src="{{ $course->cover_photo ?? asset('images/default_course_thumb.png') }}" alt="{{ $course->title }}" class="w-full h-full object-cover">
-                {{-- Jika mau pake SVG Python dari inspect element lo, itu perlu ditaruh di sini --}}
-                @else
-                     <div class="w-full h-full flex items-center justify-center bg-gray-200">
-                        <i class="fab fa-python fa-4x text-gray-500"></i> {{-- Contoh ikon Python --}}
+    <p class="self-stretch w-full text-xl text-left text-[#4c5a73] mt-6">COURSES</p>
+    <div class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        @forelse ($allAvailableCourses as $course)
+        <div class="flex flex-col w-full h-auto rounded-[30px] bg-white" style="box-shadow: 0px 4px 11px 0 rgba(0,0,0,0.25);">
+            {{-- Bagian atas kartu: Judul, Subtitle, lalu Gambar --}}
+            <div class="flex flex-col justify-start items-start self-stretch w-full p-6 rounded-t-[30px]">
+                {{-- Konten Teks (Judul & Subtitle) --}}
+                
+                {{-- Konten Gambar --}}
+                <a href="{{ route('courses.show', $course->slug) }}" class="block w-full h-[187px] rounded-lg overflow-hidden"> {{-- Tinggi eksplisit buat area gambar, rounded, dan overflow-hidden --}}
+                    @if($course->thumbnail_path)
+                    <img src="{{ $course->thumbnail_url ?? asset('images/default_course_thumb.png') }}" alt="{{ $course->title }}" class="w-full h-full object-cover">
+                    @else
+                        <div class="w-full h-full flex items-center justify-center bg-gray-200">
+                            {{-- Kalo mau pake ikon Font Awesome Python --}}
+                            {{-- <i class="fab fa-python fa-4x text-gray-500"></i> --}}
+                            {{-- Atau SVG placeholder jika ada --}}
+                            <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path></svg>
+                        </div>
+                        @endif
+                    </a>
+                </div>
+                
+                <div class="w-full mb-4 px-4"> {{-- Tambah w-full dan margin bawah buat jarak --}}
+                    <a href="{{ route('courses.show', $course->slug) }}"> {{-- Judul juga bisa di-link --}}
+                        <p class="text-xl  font-bold text-left text-black">{{ $course->title }}</p>
+                    </a>
+                    <p class="text-xs sm:text-sm text-left text-black">{{ $course->subtitle ?? 'Beginner to Advanced' }}</p>
+                </div>
+            {{-- Bagian detail course (Chapter, Quiz, Mentor) --}}
+            <div class="flex flex-col justify-start items-start self-stretch flex-grow gap-2.5 p-6">
+                <p class="text-sm sm:text-lg font-light text-left text-black">{{ $course->materials_count ?? 'N/A' }} Chapter</p>
+                <p class="text-sm sm:text-lg font-light text-left text-black">{{ $course->quizzes_count ?? 'N/A' }} Quiz</p>
+                <p class="text-sm sm:text-lg font-light text-left text-black">Mentor: {{ $course->mentor->name ?? 'N/A' }}</p>
+                {{-- Progress bar (dikomen dulu sesuai kode asli lo) --}}
+                {{-- <div class="self-stretch h-2 mt-2">
+                    <div class="w-full h-full rounded-[50px] bg-[#d1adff] relative">
+                        <div class="h-full rounded-[50px] bg-[#9747ff]" style="width: 60%;"></div>
                     </div>
-                    @endif
-            </a>
-            <div class="absolute top-6 left-6">
-                <p class="text-[28px] sm:text-[35px] font-bold text-left text-black">{{ $course->title }}</p>
-                <p class="text-xs sm:text-sm text-left text-black">{{ $course->subtitle ?? 'Beginner to Advanced' }}</p> {{-- Asumsi ada subtitle --}}
-            </div>
-        </div>
-        <div class="flex flex-col justify-start items-start self-stretch flex-grow gap-2.5 p-6">
-            <p class="text-sm sm:text-lg font-light text-left text-black">{{ $course->materials_count ?? 'N/A' }} Chapter</p>
-            <p class="text-sm sm:text-lg font-light text-left text-black">{{ $course->quizzes_count ?? 'N/A' }} Quiz</p>
-            <p class="text-sm sm:text-lg font-light text-left text-black">Mentor: {{ $course->mentor->name ?? 'N/A' }}</p>
-            {{-- Progress bar dari inspect element lo --}}
-            {{-- <div class="self-stretch h-2 mt-2">
-                <div class="w-full h-full rounded-[50px] bg-[#d1adff] relative">
-                    <div class="h-full rounded-[50px] bg-[#9747ff]" style="width: 60%;"></div> {{-- Ganti 60% dengan data progress --}}
-                {{-- </div>
                 </div> --}}
             </div>
-            <div class="flex flex-col justify-center items-center self-stretch p-4 sm:p-6 rounded-b-[30px] {{-- Dulu bg-[#d9d9d9] --}} border-t border-gray-200">
+
+            {{-- Bagian tombol "View Course" --}}
+            <div class="flex flex-col justify-center items-center self-stretch p-4 sm:p-6 rounded-b-[30px] border-t border-gray-200">
                 <a href="{{ route('courses.show', $course->slug) }}" class="w-full text-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-3 rounded-md text-sm sm:text-lg">
                     View Course
                 </a>
             </div>
         </div>
-    @empty
-    <p class="col-span-full text-center text-gray-600">Tidak ada course yang tersedia.</p>
-    @endforelse
-  </div>
+        @empty
+        <p class="col-span-full text-center text-gray-600">Tidak ada course yang tersedia.</p>
+        @endforelse
+    </div>
 </div>
 </div>
 @endsection

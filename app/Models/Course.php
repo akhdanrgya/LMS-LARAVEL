@@ -102,7 +102,7 @@ class Course extends Model
     public function getThumbnailUrlAttribute()
     {
         if ($this->thumbnail_path) {
-            // return asset('storage/' . $this->thumbnail_path); // Pastikan sudah php artisan storage:link
+            return asset('storage/' . $this->thumbnail_path); // Pastikan sudah php artisan storage:link
         }
         return asset('images/default_course_thumbnail.png'); // Sediakan gambar default
     }

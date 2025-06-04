@@ -14,9 +14,6 @@ class DatabaseSeeder extends Seeder
         // Panggil seeder lain sesuai urutan dependensi
         $this->call([
             UserSeeder::class,    // User dulu (termasuk profile mereka)
-            CourseSeeder::class,  // Baru Course (butuh mentor dari UserSeeder)
-            EnrollmentSeeder::class, // Terakhir Enrollment (butuh student & course)
-            // Tambahin seeder lain di sini kalo ada, misal MaterialSeeder, QuizSeeder, dll.
         ]);
     }
 }
