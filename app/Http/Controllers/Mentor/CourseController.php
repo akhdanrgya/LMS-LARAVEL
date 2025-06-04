@@ -96,4 +96,23 @@ class CourseController extends Controller
         return redirect()->route('mentor.courses.index')
                          ->with('success', 'Course berhasil dihapus!');
     }
+
+    public function enrolledStudents(Course $course)
+    {
+        // 1. Otorisasi: Pastikan mentor ini adalah pemilik course
+        if ($course->mentor_id !== Auth::id()) {
+            abort(403, 'Anda tidak berhak melihat daftar student untuk course ini.');
+        }
+
+        // 2. Ambil data student yang terdaftar di course ini
+        // Kita pake relasi 'students' yang udah kita definisiin di model Course
+        // Relasi 'students' itu belongsToMany ke User (student) lewat tabel enrollments.
+        // Kita juga bisa ambil tanggal enrollment dari pivot table.
+        $enrolledStudents = $course->students() // Ini ngembaliin instance BelongsToMany
+                                   ->withPivot('enrolled_at', 'completion_status') // Ambil data dari tabel pivot 'enrollments'
+                                   ->orderBy('pivot_enrolled_at', 'desc') // Urutkan berdasarkan tanggal enroll terbaru
+                                   ->paginate(15); // Paginasi biar gak berat
+
+        return view('mentor.courses.students.index', compact('course', 'enrolledStudents'));
+    }
 }

@@ -84,6 +84,13 @@
                                             title="Edit Course">
                                             <i class="fas fa-pencil-alt"></i>
                                         </a>
+
+                                        {{-- INI TOMBOL BARU BUAT MELIHAT STUDENT --}}
+                                        <a href="{{ route('mentor.courses.students.index', $course->slug) }}"
+                                            class="w-8 h-8 rounded bg-teal-500 hover:bg-teal-600 text-white flex items-center justify-center transform hover:scale-110 transition-transform duration-300"
+                                            title="Lihat Student Terdaftar">
+                                            <i class="fas fa-users"></i>
+                                        </a>
                                         {{-- Tombol Hapus Course --}}
                                         <form action="{{ route('mentor.courses.destroy', $course->slug) }}" method="POST"
                                             onsubmit="return confirm('Yakin mau hapus course \'{{ $course->title }}\'? Semua materi dan quiz di dalamnya juga akan terhapus!');"

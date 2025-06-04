@@ -26,6 +26,7 @@ use App\Http\Controllers\Student\MyCoursesController as StudentMyCoursesControll
 use App\Http\Controllers\Student\EnrollmentController as StudentEnrollmentController;
 use App\Http\Controllers\Student\OverviewController as StudentOverviewController;
 use App\Http\Controllers\Student\QuizAttemptController as StudentQuizAttemptController;
+use App\Http\Controllers\Student\MaterialController as StudentMaterialController;
 
 
 /*
@@ -86,6 +87,10 @@ Route::middleware(['auth', 'role:mentor'])->prefix('mentor')->name('mentor.')->g
     // 2. Resourceful route untuk Course milik Mentor
     Route::resource('courses', MentorCourseController::class);
 
+        // --- RUTE BARU BUAT MELIHAT STUDENT DI COURSE ---
+    Route::get('/courses/{course:slug}/students', [App\Http\Controllers\Mentor\CourseController::class, 'enrolledStudents'])
+         ->name('courses.students.index'); // Nama route jadi mentor.courses.students.index
+
     // 3. Resourceful route untuk Materi di dalam Course (NESTED)
     // INI YANG PERLU LO TAMBAHKAN:
     Route::resource('courses.materials', MentorMaterialController::class)
@@ -110,6 +115,11 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')
 
     // Proses enroll ke course
     Route::post('/enroll/{course}', [StudentEnrollmentController::class, 'store'])->name('courses.enroll');
+
+        // --- RUTE UNTUK MELIHAT DETAIL MATERI ---
+    // {course} akan di-resolve pake slug, {material} pake ID by default
+    Route::get('/courses/{course:slug}/materials/{material}', [StudentMaterialController::class, 'show'])
+         ->name('courses.materials.show'); // Nama route jadi student.courses.materials.show
 
     // Contoh route buat ngerjain quiz (Nanti kalo udah ada StudentQuizAttemptController)
     // Route::get('/courses/{course}/quiz/{quiz}/attempt', [StudentQuizAttemptController::class, 'create'])->name('quiz.attempt');
