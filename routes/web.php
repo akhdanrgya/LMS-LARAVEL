@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\LoginController;
 // Controller Publik & Home
 use App\Http\Controllers\HomeController;         // Untuk halaman /home generik
 use App\Http\Controllers\CoursePageController;  // Untuk halaman publik daftar & detail course
+use App\Http\Controllers\ProfileController;  // Untuk halaman publik daftar & detail course
 
 // Controller Admin
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
@@ -59,6 +60,8 @@ Route::middleware(['auth'])->group(function () {
     // Halaman "All Courses" untuk semua user yang sudah login
     Route::get('/courses', [CoursePageController::class, 'index'])->name('courses.index');
     Route::get('/courses/{course:slug}', [CoursePageController::class, 'show'])->name('courses.show');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     // Halaman /home sekarang tidak ada, redirect dihandle oleh LoginController & RegisterController
     // Dan oleh RedirectIfAuthenticated middleware
