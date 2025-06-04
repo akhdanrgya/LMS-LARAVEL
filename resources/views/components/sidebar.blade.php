@@ -44,8 +44,8 @@
     </a>
     <a href=""
     class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
-    <i class="fas fa-file-alt text-[#4c5a73] w-4"></i>
-    <p class="text-sm text-[#4c5a73]">Manage Materials</p>
+    <i class="fas fa-fa-users text-[#4c5a73] w-4"></i>
+    <p class="text-sm text-[#4c5a73]">Manage Students</p>
     </a>
     @endif
 
