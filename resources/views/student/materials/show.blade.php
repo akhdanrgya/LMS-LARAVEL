@@ -3,6 +3,7 @@
 @section('title', $material->title . ' - ' . $course->title)
 
 @section('content')
+@include('components.header')
 <div class="container mx-auto px-4 py-8">
     <div class="mb-6">
         <a href="{{ route('courses.show', $course->slug) }}" class="text-sm text-indigo-600 hover:text-indigo-800 mb-1 inline-block">

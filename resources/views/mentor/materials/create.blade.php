@@ -7,6 +7,7 @@
 @endpush
 
 @section('content')
+@include('components.header')
 <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="flex justify-between items-center mb-4">
         <h1 class="text-2xl font-semibold text-gray-800">Tambah Materi ke Course: <span class="font-normal text-indigo-600">{{ $course->title }}</span></h1>

@@ -3,6 +3,7 @@
 @section('title', 'All Course')
 
 @section('content')
+@include('components.header')
 <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Telusuri Semua Course</h1>

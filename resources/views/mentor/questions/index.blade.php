@@ -7,6 +7,7 @@
 @endpush
 
 @section('content')
+@include('components.header')
 
 {{-- PASTIKAN BLOK PHP INI ADA SEBELUM TAG <script> ALPINE.JS --}}
 @php

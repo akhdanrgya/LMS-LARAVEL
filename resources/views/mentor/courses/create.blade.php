@@ -3,6 +3,7 @@
 @section('title', 'Create Courses')
 
 @section('content')
+@include('components.header')
     {{-- ... @extends, @section ... --}}
     <div>
         <form action="{{ route('mentor.courses.store') }}" method="POST" enctype="multipart/form-data">

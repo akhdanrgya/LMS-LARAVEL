@@ -3,6 +3,7 @@
 @section('title', $course->title . ' - LMS Kita')
 
 @section('content')
+@include('components.header')
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         @include('layouts.partials.alerts') {{-- Nampilin notifikasi session --}}

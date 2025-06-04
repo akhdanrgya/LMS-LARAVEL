@@ -3,6 +3,7 @@
 @section('title', 'Tambah Quiz Baru untuk Course: ' . $course->title)
 
 @section('content')
+@include('components.header')
 <div class="container mx-auto px-4 py-8">
     <div class="flex justify-between items-center mb-4">
         <h1 class="text-2xl font-semibold">Tambah Quiz ke: <span class="text-indigo-600">{{ $course->title }}</span></h1>

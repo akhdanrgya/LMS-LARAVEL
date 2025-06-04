@@ -3,6 +3,7 @@
 @section('title', 'Mentor Dashboard')
 
 @section('content')
+@include('components.header')
 <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-6">Selamat Datang, Mentor {{ $mentorName }}!</h1>
 

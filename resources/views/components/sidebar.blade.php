@@ -69,24 +69,6 @@
     @endif
 
   @endauth
-
-  <p class="text-xs text-[#4c5a73] mt-4">FRIENDS</p>
-
-  <a href="#" class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
-    <i class="fas fa-user-ninja text-[#4c5a73] w-4"></i>
-    <p class="text-sm text-[#4c5a73]">Martha</p>
-  </a>
-
-  <a href="#" class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4f6]">
-    <i class="fas fa-user-astronaut text-[#4c5a73] w-4"></i>
-    <p class="text-sm text-[#4c5a73]">Adan</p>
-  </a>
-
-  <a href="#" class="flex items-center gap-2.5 cursor-pointer px-2 py-1 rounded hover:bg-[#f3f4a73]">
-    <i class="fas fa-skull text-[#4c5a73] w-4"></i>
-    <p class="text-sm text-[#4c5a73]">Nca</p>
-  </a>
-
   <div class="mt-auto pt-4 border-t border-gray-300"> {{-- mt-auto buat dorong ke bawah kalo sidebar flex column --}}
     <form method="POST" action="{{ route('logout') }}">
       @csrf {{-- Jangan lupa CSRF token! --}}

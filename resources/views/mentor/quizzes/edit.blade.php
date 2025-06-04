@@ -3,6 +3,7 @@
 @section('title', 'Edit Quiz: ' . $quiz->title)
 
 @section('content')
+@include('components.header')
 <div class="container mx-auto px-4 py-8">
     <div class="flex justify-between items-center mb-4">
         <div>

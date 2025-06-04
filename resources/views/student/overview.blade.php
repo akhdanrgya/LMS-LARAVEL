@@ -24,7 +24,7 @@
         justify-content: center;
         font-size: 0.75rem; /* Ukuran font persentase di tengah */
         font-weight: bold;
-        color: #4A55A2; /* Warna teks progress */
+        color: #e100ff; /* Warna teks progress */
     }
     .fa-2x { /* Sedikit penyesuaian ukuran ikon jika diperlukan */
         font-size: 1.6em; 
@@ -33,9 +33,8 @@
 @endpush
 
 @section('content')
+@include('components.header')
 <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-8">Selamat Datang Kembali, {{ $studentName ?? Auth::user()->name }}!</h1>
-
     @include('layouts.partials.alerts') {{-- Nampilin notifikasi session --}}
 
     {{-- Baris Statistik Utama (Card) --}}
@@ -68,32 +67,12 @@
             </div>
             <p class="text-3xl font-semibold text-gray-800">{{ $totalQuizScore ?? 0 }}</p>
         </div>
-        <div class="bg-white p-5 rounded-xl shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out">
-            <div class="flex items-center mb-2">
-                <i class="fas fa-trophy fa-lg text-orange-500 mr-3"></i>
-                <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Current Level</p>
-            </div>
-            <p class="text-3xl font-semibold text-gray-800">{{ $currentLevel ?? 1 }}</p>
-        </div>
-        <div class="bg-white p-5 rounded-xl shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out col-span-1 sm:col-span-2 lg:col-span-3"> {{-- Dibuat lebih lebar --}}
-            <div class="flex items-center mb-2">
-                <i class="fas fa-chart-line fa-lg text-teal-500 mr-3"></i>
-                <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">EXP Progress</p>
-            </div>
-            <p class="text-xl font-semibold text-gray-800">{{ $currentLevelExp ?? 0 }} / {{ $pointsForNextLevel ?? 500 }} EXP to Next Level</p>
-            @php
-                $progressPercentage = ($pointsForNextLevel > 0) ? ($currentLevelExp / $pointsForNextLevel) * 100 : 0;
-            @endphp
-            <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                <div class="bg-teal-500 h-2.5 rounded-full" style="width: {{ $progressPercentage }}%"></div>
-            </div>
-        </div>
     </div>
 
     {{-- Bagian "MY COURSES" Preview --}}
     <div class="mb-10">
         <div class="flex justify-between items-center mb-4">
-            <h2 class="text-2xl font-semibold text-gray-700">My Courses (Recent Progress)</h2>
+            <h2 class="text-2xl font-semibold text-gray-700">My Courses</h2>
             <a href="{{ route('student.my-courses.index') }}" class="text-indigo-600 hover:text-indigo-800 font-semibold transition-colors">
                 Lihat Semua <i class="fas fa-angle-right ml-1"></i>
             </a>
@@ -121,7 +100,7 @@
                             <div class="flex items-center justify-center my-3">
                                 <div class="pie-chart-container">
                                     <div class="pie-chart" style="--progress: {{ $course->progress_percentage ?? 0 }}%;">
-                                        <span>{{ $course->progress_percentage ?? 0 }}%</span>
+                                        <span clas>{{ $course->progress_percentage ?? 0 }}%</span>
                                     </div>
                                 </div>
                             </div>
@@ -143,21 +122,6 @@
                 <p class="text-gray-500 mt-2">Yuk, mulai petualangan belajar Anda!</p>
             </div>
         @endif
-    </div>
-
-
-    {{-- Bagian Aksi Cepat Lainnya --}}
-    <div class="bg-white p-6 rounded-xl shadow-lg">
-        <h2 class="text-xl font-semibold mb-4 text-gray-700">Jelajahi Lebih Lanjut</h2>
-        <div class="flex flex-wrap gap-4">
-            <a href="{{ route('courses.index') }}" 
-               class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-5 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out flex items-center space-x-2">
-                <i class="fas fa-th-large"></i>
-                <span>Lihat Semua Course</span>
-            </a>
-            {{-- Tambahkan link lain jika perlu, misal ke halaman profil student, leaderboard, dll --}}
-            {{-- <a href="#" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-5 rounded-lg">Profil Saya</a> --}}
-        </div>
     </div>
 </div>
 @endsection

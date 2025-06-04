@@ -87,7 +87,7 @@ class User extends Authenticatable // implements MustVerifyEmail (jika perlu)
     {
         return $this->belongsToMany(Course::class, 'enrollments', 'student_id', 'course_id')
                     ->withTimestamps() // jika mau ambil created_at/updated_at dari pivot table (enrollments)
-                    ->withPivot('completion_status', 'completed_at'); // ambil kolom tambahan dari pivot table
+                    ->withPivot('completion_status', 'completed_at','enrolled_at'); // ambil kolom tambahan dari pivot table
     }
 
     /**
