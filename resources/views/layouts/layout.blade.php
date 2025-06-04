@@ -28,10 +28,6 @@
       {{-- mx-auto mungkin gak perlu lagi di sini kalo kontennya mau full selebar sisa area --}}
       {{-- Kalo konten di dalem @yield mau ada max-width dan ditengahin, atur di dalem view-nya aja --}}
       <div class="p-4 md:p-6 lg:p-8"> {{-- Tambahin padding di sini buat jarak konten dari tepi --}}
-        
-        {{-- Notifikasi (kalo mau dipindahin ke sini dari contoh gue sebelumnya) --}}
-        @include('layouts.partials.alerts') {{-- Pastiin path ini bener atau pindahin logic alert ke sini --}}
-
         @yield('content')
       </div>
     </div>
