@@ -25,7 +25,7 @@ use App\Http\Controllers\Student\DashboardController as StudentDashboardControll
 use App\Http\Controllers\Student\MyCoursesController as StudentMyCoursesController;
 use App\Http\Controllers\Student\EnrollmentController as StudentEnrollmentController;
 use App\Http\Controllers\Student\OverviewController as StudentOverviewController;
-// use App\Http\Controllers\Student\QuizAttemptController as StudentQuizAttemptController; // Nanti kalo ada
+use App\Http\Controllers\Student\QuizAttemptController as StudentQuizAttemptController;
 
 
 /*
@@ -114,4 +114,12 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')
     // Contoh route buat ngerjain quiz (Nanti kalo udah ada StudentQuizAttemptController)
     // Route::get('/courses/{course}/quiz/{quiz}/attempt', [StudentQuizAttemptController::class, 'create'])->name('quiz.attempt');
     // Route::post('/courses/{course}/quiz/{quiz}/attempt', [StudentQuizAttemptController::class, 'store']);
+
+    // Menampilkan halaman pengerjaan quiz (memulai attempt baru)
+    Route::get('/courses/{course}/quizzes/{quiz}/start', [StudentQuizAttemptController::class, 'startAttempt'])
+    ->name('quiz.attempt.start');
+
+    // Menyimpan/submit jawaban quiz
+    Route::post('/courses/{course}/quizzes/{quiz}/attempts/{attempt}/submit', [StudentQuizAttemptController::class, 'submitAttempt'])
+        ->name('quiz.attempt.submit');
 });

@@ -66,24 +66,37 @@
                 
                 <template x-for="(option, index) in options" :key="index">
                     <div class="flex items-center mb-2 gap-2">
-                        <input type="text" :name="'options[' + index + '][text]'" x-model="option.text" placeholder="Teks Pilihan Jawaban" 
-                               class="flex-grow rounded-md border-gray-300 shadow-sm text-sm">
+                        {{-- Input Teks Pilihan Jawaban --}}
+                        <input type="text" :name="'options[' + index + '][text]'" x-model="option.text" 
+                               placeholder="Teks Pilihan Jawaban" 
+                               class="flex-grow rounded-md border-gray-300 shadow-sm text-sm 
+                                      {{-- Logika buat nampilin border merah kalo ada error bisa lebih kompleks --}}
+                                      {{-- Contoh: :class="{'border-red-500': errors && errors['options.'+index+'.text']}" --}}
+                                      ">
                         
-                        <label :for="'is_correct_' + index" class="flex items-center text-sm">
-                            <input :type="type === 'multiple_choice' ? 'checkbox' : 'radio'" 
-                                   :name="type === 'multiple_choice' ? 'options[' + index + '][is_correct]' : 'options_radio_correct'" 
-                                   :id="'is_correct_' + index" 
-                                   :value="index" {{-- Untuk radio, value-nya adalah index, nanti di backend dihandle --}}
-                                   x-model="option.is_correct" 
-                                   class="mr-1 h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                        {{-- Input Visual untuk Menandai Jawaban Benar (Radio atau Checkbox) --}}
+                        <label :for="'visual_correct_marker_' + index" class="flex items-center text-sm cursor-pointer">
+                            <input 
+                                :type="type === 'multiple_choice' ? 'checkbox' : 'radio'"
+                                :name="'visual_correct_marker_for_type_' + type + (type === 'single_choice' ? '' : '_' + index)" 
+                                :id="'visual_correct_marker_' + index"
+                                @change="toggleCorrect(index)"
+                                :checked="option.is_correct"
+                                class="mr-1 h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
                             Benar?
                         </label>
                         
+                        {{-- INPUT HIDDEN untuk submit nilai is_correct yang sebenarnya --}}
+                        <input type="hidden" :name="'options[' + index + '][is_correct]'" :value="option.is_correct ? '1' : '0'">
+                        
+                        {{-- Tombol Hapus Pilihan --}}
                         <button type="button" @click="removeOption(index)" x-show="options.length > minOptions"
                                 class="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-100">
                             <i class="fas fa-times-circle"></i>
                         </button>
                     </div>
+                    {{-- BARIS @error('options.'+index+'.text') DIHAPUS DARI SINI --}}
+                    {{-- Kalo mau nampilin error per field di sini, butuh cara lain (misal lewat Alpine.js) --}}
                 </template>
                 <button type="button" @click="addOption()" x-show="options.length < maxOptions"
                         class="mt-2 text-sm text-indigo-600 hover:text-indigo-800 border border-indigo-300 hover:bg-indigo-50 px-3 py-1 rounded-md">
@@ -113,11 +126,11 @@
                             <p class="text-md font-medium text-gray-800 mt-1">{!! nl2br(e($question->question_text)) !!}</p>
                         </div>
                         <div class="flex space-x-2 flex-shrink-0">
-                            <a href="{{-- route('mentor.courses.quizzes.questions.edit', [$course->slug, $quiz->id, $question->id]) --}}" 
-                               class="text-yellow-600 hover:text-yellow-800" title="Edit Pertanyaan">
+                            <a href="{{ route('mentor.courses.quizzes.questions.edit', ['course' => $course->slug, 'quiz' => $quiz->id, 'question' => $question->id]) }}" 
+                            class="text-yellow-600 hover:text-yellow-800" title="Edit Pertanyaan">
                                 <i class="fas fa-pencil-alt"></i>
                             </a>
-                            <form action="{{-- route('mentor.courses.quizzes.questions.destroy', [$course->slug, $quiz->id, $question->id]) --}}" method="POST" onsubmit="return confirm('Yakin hapus pertanyaan ini?');" class="inline-block">
+                            <form action="{{ route('mentor.courses.quizzes.questions.destroy', ['course' => $course->slug, 'quiz' => $quiz->id, 'question' => $question->id]) }}" method="POST" onsubmit="return confirm('Yakin hapus pertanyaan ini?');" class="inline-block">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="text-red-600 hover:text-red-800" title="Hapus Pertanyaan">
@@ -146,62 +159,88 @@
 </div>
 
 {{-- Tag <script> dan isinya persis sama dengan yang lo kasih sebelumnya --}}
-<script>
-    function questionForm() {
-        return {
-            type: '{{ old('question_type', 'single_choice') }}',
-            options: @json($optionsForAlpine),
-            minOptions: 2,
-            maxOptions: 5,
-            
-            init() {
-                if (this.type === 'essay') {
-                    this.options = [];
-                } else if (this.options.length === 0 && (this.type === 'multiple_choice' || this.type === 'single_choice')) { 
-                    // Tambahan: Jika options kosong dan tipe bukan essay, inisialisasi dengan minOptions
-                    for (let i = 0; i < this.minOptions; i++) {
-                        this.options.push({ text: '', is_correct: false });
-                    }
-                }
-                this.$watch('type', newType => {
-                    if (newType === 'essay') {
-                        this.options = [];
-                    } else if (this.options.length < this.minOptions) {
-                        for (let i = this.options.length; i < this.minOptions; i++) {
-                            this.options.push({ text: '', is_correct: false });
+    <script>
+        function questionForm() {
+            // Ambil data options dari PHP, termasuk old input jika ada, atau default jika tidak ada
+            let initialOptions = @json($optionsForAlpine);
+            let initialType = '{{ old('question_type', 'single_choice') }}';
+    
+            // Jika tipe esai dan initialOptions masih default (2 pilihan kosong), maka kosongkan.
+            if (initialType === 'essay' && initialOptions.length === 2 && initialOptions.every(opt => opt.text === '' && opt.is_correct === false)) {
+                initialOptions = [];
+            }
+            // Jika tipe bukan esai dan initialOptions kosong, buat default minimal.
+            else if (initialType !== 'essay' && initialOptions.length === 0) {
+                initialOptions = Array.from({length: 2}, () => ({text: '', is_correct: false}));
+            }
+    
+    
+            return {
+                type: initialType,
+                options: initialOptions,
+                minOptions: 2,
+                maxOptions: 5, // Atur maksimal pilihan jawaban
+                
+                init() {
+                    // Panggil toggleCorrect sekali di init untuk memastikan state awal radio button benar jika ada old input
+                    // atau jika ada data dari $question (untuk form edit nantinya)
+                    if (this.type === 'single_choice') {
+                        let correctIndex = -1;
+                        this.options.forEach((opt, idx) => {
+                            if (opt.is_correct) {
+                                correctIndex = idx;
+                            }
+                        });
+                        if (correctIndex !== -1) {
+                            this.toggleCorrect(correctIndex); // Set initial correct state
                         }
                     }
-                    this.ensureSingleCorrectForRadio();
-                });
-                this.$watch('options', () => {
-                     this.ensureSingleCorrectForRadio();
-                }, { deep: true });
-            },
-            
-            addOption() {
-                if (this.options.length < this.maxOptions) {
-                    this.options.push({ text: '', is_correct: false });
-                }
-            },
-            removeOption(index) {
-                if (this.options.length > this.minOptions) { // Tetap > minOptions biar gak bisa hapus semua
-                    this.options.splice(index, 1);
-                }
-            },
-            ensureSingleCorrectForRadio() {
-                if (this.type === 'single_choice') {
-                    let foundCorrect = false;
-                    this.options.forEach((option) => { // Hapus 'idx' jika tidak dipakai
-                        if (option.is_correct) {
-                            if (foundCorrect) {
-                                option.is_correct = false; 
+    
+                    this.$watch('type', newType => {
+                        if (newType === 'essay') {
+                            this.options = [];
+                        } else if (this.options.length < this.minOptions) { 
+                            // Jika pindah dari essay ke pilihan, atau options kosong, tambahkan opsi default
+                            for (let i = this.options.length; i < this.minOptions; i++) {
+                                this.options.push({ text: '', is_correct: false });
                             }
-                            foundCorrect = true;
+                        }
+                        // Jika tipe baru adalah single_choice, pastikan hanya satu (atau nol) yang is_correct
+                        if (newType === 'single_choice') {
+                            let foundCorrect = false;
+                            this.options.forEach(opt => {
+                                if (opt.is_correct) {
+                                    if (foundCorrect) opt.is_correct = false; // Hanya satu
+                                    foundCorrect = true;
+                                }
+                            });
                         }
                     });
+                },
+                
+                toggleCorrect(selectedIndex) {
+                    if (this.type === 'single_choice') {
+                        this.options.forEach((option, idx) => {
+                            option.is_correct = (idx === selectedIndex);
+                        });
+                    } else if (this.type === 'multiple_choice') {
+                        // Untuk checkbox, toggle state-nya
+                        this.options[selectedIndex].is_correct = !this.options[selectedIndex].is_correct;
+                    }
+                    // Untuk tipe essay, tidak ada is_correct
+                },
+                
+                addOption() {
+                    if (this.options.length < this.maxOptions) {
+                        this.options.push({ text: '', is_correct: false });
+                    }
+                },
+                removeOption(index) {
+                    if (this.options.length > this.minOptions) {
+                        this.options.splice(index, 1);
+                    }
                 }
             }
         }
-    }
-</script>
+    </script>
 @endsection

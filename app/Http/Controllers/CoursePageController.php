@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;    // Import Model Course
 use Illuminate\Http\Request; // Import Request untuk handle input, misal search
-// use Illuminate\Support\Facades\Auth; // Opsional, jika ada logic yg butuh status login di controller ini
+use Illuminate\Support\Facades\Auth; // Opsional, jika ada logic yg butuh status login di controller ini
+use App\Models\Enrollment; 
 
 class CoursePageController extends Controller
 {
@@ -39,21 +40,21 @@ class CoursePageController extends Controller
      * @param  \App\Models\Course  $course
      * @return \Illuminate\View\View
      */
-    public function show(Course $course)
+    public function show(Course $course) // Route model binding otomatis pake slug
     {
-        // Eager load relasi-relasi yang dibutuhkan di halaman detail
-        $course->load([
-            'mentor', 
-            'materials' => function($query) {
-                $query->orderBy('order_sequence', 'asc'); // Urutkan materi berdasarkan order_sequence
-            }, 
-            'quizzes'
-            // Jika butuh jumlah student atau rata-rata rating, bisa tambahkan withCount atau accessor
-            // 'enrollments', // Untuk menghitung student atau menampilkan daftar student (jika diizinkan)
-            // 'ratings' // Untuk menghitung rata-rata rating atau menampilkan review
-        ]);
-        
-        // Kirim data course spesifik ke view 'courses.show'
-        return view('courses.show', compact('course'));
+        $student = Auth::user();
+        $isEnrolled = false;
+
+        // Cek apakah student (jika rolenya student) sudah terdaftar di course ini
+        if ($student && $student->role === 'student') {
+            $isEnrolled = Enrollment::where('student_id', $student->id)
+                                    ->where('course_id', $course->id)
+                                    ->exists();
+        }
+
+        // Eager load relasi yang mungkin dibutuhkan di view
+        $course->load(['mentor', 'materials', 'quizzes.questions']); // Load quizzes, dan hitung juga jumlah soalnya
+
+        return view('courses.show', compact('course', 'isEnrolled'));
     }
 }

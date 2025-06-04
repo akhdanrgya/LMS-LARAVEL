@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Student; // Pastikan namespace-nya
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-// use App\Models\Enrollment; // Gak perlu kalo pake relasi dari User model
+use App\Models\Enrollment;
 
 class OverviewController extends Controller
 {

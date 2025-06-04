@@ -131,22 +131,52 @@
             </div>
 
             {{-- Daftar Quiz --}}
-            <div class="bg-white p-6 rounded-xl shadow-lg">
-                <h3 class="text-xl font-semibold text-gray-700 mb-4 border-b pb-3">Quiz</h3>
-                @if($course->quizzes && $course->quizzes->count() > 0)
-                    <ul class="space-y-3">
-                        @foreach ($course->quizzes as $quiz)
-                            <li class="flex items-center text-gray-600 hover:text-indigo-600 transition-colors">
-                                <i class="fas fa-puzzle-piece mr-3 w-5 text-center text-indigo-500"></i>
-                                <span>{{ $quiz->title }}</span>
-                                {{-- Nanti link ini bisa ngarah ke halaman quiz kalo student udah enroll --}}
-                            </li>
-                        @endforeach
-                    </ul>
+            @if($isEnrolled || (Auth::check() && (Auth::user()->id == $course->mentor_id || Auth::user()->role == 'admin')) )
+            <div class="bg-white p-6 rounded-xl shadow-xl">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-5">Daftar Quiz</h2>
+                @if($course->quizzes->isEmpty())
+                    <p class="text-gray-600">Belum ada quiz untuk course ini.</p>
                 @else
-                    <p class="text-gray-500">Belum ada quiz untuk course ini.</p>
+                    <div class="space-y-4">
+                        @foreach ($course->quizzes as $quiz)
+                        <div class="border p-4 rounded-lg hover:shadow-md transition-shadow flex justify-between items-center">
+                            <div>
+                                <h3 class="text-xl font-medium text-indigo-700">{{ $quiz->title }}</h3>
+                                <p class="text-sm text-gray-600 mt-1">{{ Str::limit($quiz->description, 100) }}</p>
+                                <div class="text-xs text-gray-500 mt-2">
+                                    <span><i class="fas fa-question-circle mr-1"></i> {{ $quiz->questions_count ?? $quiz->questions->count() }} Pertanyaan</span>
+                                    @if($quiz->duration_minutes)
+                                    <span class="ml-3"><i class="fas fa-clock mr-1"></i> {{ $quiz->duration_minutes }} Menit</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="ml-4 flex-shrink-0">
+                                @auth
+                                    @if(Auth::user()->role == 'student' && $isEnrolled)
+                                        {{-- Cek apakah student sudah pernah mengerjakan atau ada attempt yang aktif --}}
+                                        @php
+                                            // $existingAttempt = Auth::user()->quizAttempts()->where('quiz_id', $quiz->id)->whereNull('submitted_at')->first();
+                                            // $completedAttempt = Auth::user()->quizAttempts()->where('quiz_id', $quiz->id)->whereNotNull('submitted_at')->orderBy('submitted_at', 'desc')->first();
+                                        @endphp
+                                        {{-- Logika untuk tombol "Lanjutkan Quiz" atau "Lihat Hasil" bisa ditambahkan di sini --}}
+                                        <a href="{{ route('student.quiz.attempt.start', ['course' => $course->slug, 'quiz' => $quiz->id]) }}" 
+                                           class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow hover:shadow-md transition-colors">
+                                            Kerjakan Quiz
+                                        </a>
+                                    @elseif(Auth::user()->id == $course->mentor_id)
+                                        <a href="{{ route('mentor.courses.quizzes.questions.index', ['course' => $course->slug, 'quiz' => $quiz->id]) }}" 
+                                           class="text-sm text-purple-600 hover:text-purple-800 font-semibold">
+                                            Kelola Pertanyaan
+                                        </a>
+                                    @endif
+                                @endauth
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
                 @endif
             </div>
+        @endif
         </aside>
     </div>
 </div>
