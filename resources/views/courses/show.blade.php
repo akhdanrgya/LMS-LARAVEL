@@ -11,9 +11,10 @@
         {{-- Judul Course dan Info Mentor --}}
         <div class="mb-8 p-6 bg-white rounded-xl shadow-lg">
             <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-3">{{ $course->title }}</h1>
-            <p class="text-lg text-gray-600 mb-4">Diajar oleh:
-                <a href="#"
-                    class="text-indigo-600 hover:text-indigo-800 font-semibold">{{ $course->mentor->name ?? 'Mentor Tidak Diketahui' }}</a>
+            <p>Mentor: 
+                <a href="{{ route('profiles.show', $course->mentor->id) }}" class="text-indigo-600 hover:underline">
+                    {{ $course->mentor->name ?? 'N/A' }}
+                </a>
             </p>
             <div class="flex items-center text-sm text-gray-500 mb-2">
                 <i class="fas fa-users mr-2"></i> {{ $course->students_count ?? $course->students->count() }} siswa

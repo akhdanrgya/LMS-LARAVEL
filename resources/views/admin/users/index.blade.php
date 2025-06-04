@@ -27,7 +27,9 @@
             <tbody class="text-gray-700 text-sm font-light">
                 @forelse ($users as $user)
                 <tr class="border-b border-gray-200 hover:bg-gray-100">
-                    <td class="py-3 px-6 text-left whitespace-nowrap">{{ $user->name }}</td>
+                    <td class="py-3 px-6 text-left whitespace-nowrap">
+                        <a href="{{ route('profiles.show', $user->id) }}" class="hover:text-indigo-600">{{ $user->name }}</a>
+                    </td>
                     <td class="py-3 px-6 text-left">{{ $user->email }}</td>
                     <td class="py-3 px-6 text-center">
                         <span class="px-2 py-1 font-semibold leading-tight rounded-full
