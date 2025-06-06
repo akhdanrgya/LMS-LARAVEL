@@ -6,7 +6,7 @@
 <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <h1 class="text-2xl font-semibold text-gray-800 mb-6">Edit Course (Admin): <span class="font-normal">{{ $course->title }}</span></h1>
 
-    <form action="{{ route('admin.courses.update', $course->id) }}" method="POST" enctype="multipart/form-data" class="bg-white p-8 rounded-xl shadow-xl max-w-3xl mx-auto">
+    <form action="{{ route('admin.courses.manage.update', $course->id) }}" method="POST" enctype="multipart/form-data" class="bg-white p-8 rounded-xl shadow-xl max-w-3xl mx-auto">
         @csrf
         @method('PUT')
 

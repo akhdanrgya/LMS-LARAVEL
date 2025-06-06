@@ -76,13 +76,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::resource('users', AdminUserController::class)->except(['show']);
 
-    // Course Management oleh Admin
-    Route::get('/courses', [AdminCourseManagementController::class, 'index'])->name('courses.index');
-    Route::get('/courses/{course}/edit', [AdminCourseManagementController::class, 'edit'])->name('courses.edit');
-    Route::put('/courses/{course}', [AdminCourseManagementController::class, 'update'])->name('courses.update');
-    Route::delete('/courses/{course}', [AdminCourseManagementController::class, 'destroy'])->name('courses.destroy');
-    // Opsional: Route buat toggle status
-    // Route::patch('/courses-management/{course}/status/{newStatus}', [AdminCourseManagementController::class, 'toggleStatus'])->name('courses.manage.toggleStatus');
+    // --- Course Management oleh Admin (PAKE NAMA INI BIAR KONSISTEN) ---
+    Route::get('/courses-management', [AdminCourseManagementController::class, 'index'])->name('courses.index');
+    Route::get('/courses-management/{course}/edit', [AdminCourseManagementController::class, 'edit'])->name('courses.manage.edit'); // <--- Pake .manage.edit
+    Route::put('/courses-management/{course}', [AdminCourseManagementController::class, 'update'])->name('courses.manage.update'); // <--- Pake .manage.update
+    Route::delete('/courses-management/{course}', [AdminCourseManagementController::class, 'destroy'])->name('courses.manage.destroy'); // <--- Pake .manage.destroy
 });
 
 // ------------------------- MENTOR ROUTES -------------------------

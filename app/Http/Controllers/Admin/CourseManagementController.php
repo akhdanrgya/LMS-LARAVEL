@@ -39,7 +39,7 @@ class CourseManagementController extends Controller
     public function edit(Course $course) // Route Model Binding
     {
         $mentors = User::where('role', 'mentor')->orderBy('name')->get(); // Ambil daftar mentor buat dropdown
-        return view('admin.courses.edit', compact('course', 'mentors'));
+        return view('admin.courses.manage.edit', compact('course', 'mentors'));
     }
 
     /**
