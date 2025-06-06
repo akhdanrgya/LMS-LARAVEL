@@ -47,7 +47,7 @@
                             {{-- Kalo mau ada tombol ganti status --}}
                             {{-- <form action="{{ route('admin.courses.manage.toggleStatus', [$course->id, 'published']) }}" method="POST" class="inline-block mr-1"> @csrf @method('PATCH') <button type="submit" class="text-xs bg-green-500 text-white px-2 py-1 rounded">Publish</button></form> --}}
                             {{-- <form action="{{ route('admin.courses.manage.toggleStatus', [$course->id, 'pending']) }}" method="POST" class="inline-block mr-2"> @csrf @method('PATCH') <button type="submit" class="text-xs bg-yellow-500 text-white px-2 py-1 rounded">Pending</button></form> --}}
-                            <a href="{{ route('admin.courses.manage.edit', $course->id) }}" class="w-8 h-8 rounded bg-yellow-500 text-white flex items-center justify-center mr-2 transform hover:scale-110 transition-transform duration-300" title="Edit Course">
+                            <a href="{{ route('admin.courses.manage.edit', $course->slug) }}" class="w-8 h-8 rounded bg-yellow-500 text-white flex items-center justify-center mr-2 transform hover:scale-110 transition-transform duration-300" title="Edit Course">
                                 <i class="fas fa-pencil-alt"></i>
                             </a>
                             <form action="{{ route('admin.courses.manage.destroy', $course->id) }}" method="POST" onsubmit="return confirm('Yakin mau hapus course \'{{ $course->title }}\' secara permanen? Semua data terkait akan hilang.');" class="inline-block">
