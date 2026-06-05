@@ -7,7 +7,7 @@
     <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
         <h1 class="text-2xl font-semibold text-gray-800 mb-4 sm:mb-0">Kelola Semua Course</h1>
         {{-- Form Search --}}
-        <form action="{{ route('admin.courses.index') }}" method="GET" class="flex items-center">
+        <form action="{{ route('admin.courses-management.index') }}" method="GET" class="flex items-center">
             <input type="text" name="search" placeholder="Cari judul course/mentor..." 
                    value="{{ request('search') }}" 
                    class="px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">

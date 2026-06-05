@@ -1,6 +1,6 @@
 #!/bin/bash
 #================================================================
-# deploy.sh — One-click deploy script untuk GCP VM
+# deploy.sh — One-click deploy script untuk Cloud VM (Azure/GCP)
 #================================================================
 # Cara pakai:
 #   1. SSH ke GCP VM
@@ -17,7 +17,7 @@ NC='\033[0m' # No Color
 
 echo -e "${CYAN}"
 echo "╔══════════════════════════════════════════╗"
-echo "║     LMS TUBES — GCP Deploy Script        ║"
+echo "║     LMS TUBES — Deploy Script            ║"
 echo "╚══════════════════════════════════════════╝"
 echo -e "${NC}"
 
@@ -47,7 +47,7 @@ if [ ! -f .env ]; then
     echo ""
     echo -e "${RED}  WAJIB diisi:${NC}"
     echo "    - APP_KEY (generate setelah build pertama)"
-    echo "    - APP_URL (IP/domain GCP lo)"
+    echo "    - APP_URL (IP/domain VM Azure/GCP lo)"
     echo "    - DB_PASSWORD (password yang kuat)"
     echo "    - DB_ROOT_PASSWORD (password root yang kuat)"
     echo ""

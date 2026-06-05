@@ -12,14 +12,16 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Buat Admin
-        $admin = User::create([
-            'name' => 'Admin',
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make('admin123'), // Ganti passwordnya nanti!
-            'role' => 'admin',
-            'email_verified_at' => now(),
-        ]);
+        // 1. Buat Admin (firstOrCreate biar aman kalo dijalankan ulang)
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@gmail.com'],
+            [
+                'name' => 'Admin',
+                'password' => Hash::make('admin123'), // Ganti passwordnya nanti!
+                'role' => 'admin',
+                'email_verified_at' => now(),
+            ]
+        );
         // Admin biasanya gak punya profil mentor/student khusus, tapi kalo mau bisa ditambahin
         // Lo bisa tambahin lebih banyak user pake looping atau User Factory
         // Contoh pake User Factory (kalo udah dibikin):

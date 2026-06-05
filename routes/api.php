@@ -10,7 +10,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware(['auth:sanctum', 'role:mentor'])->group(function () {
+Route::middleware(['auth:sanctum', 'role:mentor'])->name('api.')->group(function () {
     // Courses CRUD - RESTful style
     Route::apiResource('courses', CourseController::class);
 

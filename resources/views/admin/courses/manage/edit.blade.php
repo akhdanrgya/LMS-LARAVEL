@@ -60,7 +60,7 @@
         </div>
 
         <div class="flex items-center justify-end space-x-4">
-            <a href="{{ route('admin.courses.index') }}" class="text-gray-600 hover:text-gray-800">Batal</a>
+            <a href="{{ route('admin.courses-management.index') }}" class="text-gray-600 hover:text-gray-800">Batal</a>
             <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:scale-105">
                 Update Course
             </button>

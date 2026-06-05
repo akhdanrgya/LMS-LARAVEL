@@ -77,7 +77,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('users', AdminUserController::class)->except(['show']);
 
     // --- Course Management oleh Admin (PAKE NAMA INI BIAR KONSISTEN) ---
-    Route::get('/courses-management', [AdminCourseManagementController::class, 'index'])->name('courses.index');
+    Route::get('/courses-management', [AdminCourseManagementController::class, 'index'])->name('courses-management.index');
     Route::get('/courses-management/{course}/edit', [AdminCourseManagementController::class, 'edit'])->name('courses.manage.edit'); // <--- Pake .manage.edit
     Route::put('/courses-management/{course}', [AdminCourseManagementController::class, 'update'])->name('courses.manage.update'); // <--- Pake .manage.update
     Route::delete('/courses-management/{course}', [AdminCourseManagementController::class, 'destroy'])->name('courses.manage.destroy'); // <--- Pake .manage.destroy

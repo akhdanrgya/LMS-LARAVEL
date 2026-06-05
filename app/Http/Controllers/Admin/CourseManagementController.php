@@ -76,7 +76,7 @@ class CourseManagementController extends Controller
 
         $course->update($updateData);
 
-        return redirect()->route('admin.courses.index')
+        return redirect()->route('admin.courses-management.index')
                          ->with('success', 'Course "' . $course->title . '" berhasil diupdate oleh Admin.');
     }
 
@@ -95,7 +95,7 @@ class CourseManagementController extends Controller
         // foreign key di tabel-tabel tersebut ke 'courses' di-set onDelete('cascade')
         $course->delete();
 
-        return redirect()->route('admin.courses.index')
+        return redirect()->route('admin.courses-management.index')
                          ->with('success', 'Course "' . $courseTitle . '" berhasil dihapus dari sistem.');
     }
 
