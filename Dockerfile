@@ -19,8 +19,15 @@ RUN npm run build
 
 #======================================================================
 # Stage 2: Install PHP/Composer dependencies
+# Pakai PHP 8.2 biar match sama production stage (composer:2 bawa PHP 8.5
+# yang gak compatible sama beberapa dependency)
 #======================================================================
-FROM composer:2 AS composer-builder
+FROM php:8.2-cli-alpine AS composer-builder
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Install deps yang dibutuhin Composer
+RUN apk add --no-cache unzip git
 
 WORKDIR /app
 
