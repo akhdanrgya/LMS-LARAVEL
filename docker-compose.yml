@@ -1,0 +1,112 @@
+services:
+  #------------------------------------------------------------
+  # App: Laravel (PHP-FPM + Nginx via Supervisor)
+  #------------------------------------------------------------
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lms-app
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    environment:
+      APP_NAME: "${APP_NAME:-LMS TUBES}"
+      APP_ENV: "${APP_ENV:-production}"
+      APP_KEY: "${APP_KEY}"
+      APP_DEBUG: "${APP_DEBUG:-false}"
+      APP_URL: "${APP_URL:-http://localhost:8080}"
+      LOG_CHANNEL: stderr
+      LOG_LEVEL: "${LOG_LEVEL:-error}"
+      APP_LOCALE: id
+      APP_FALLBACK_LOCALE: id
+      APP_FAKER_LOCALE: id_ID
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: "${DB_DATABASE:-lms_tubes}"
+      DB_USERNAME: "${DB_USERNAME:-lms_user}"
+      DB_PASSWORD: "${DB_PASSWORD:-secret}"
+      CACHE_DRIVER: database
+      FILESYSTEM_DISK: public
+      QUEUE_CONNECTION: database
+      SESSION_DRIVER: database
+      SESSION_LIFETIME: 120
+      BCRYPT_ROUNDS: 12
+      # Flag untuk seed data pertama kali (set "true" di .env)
+      DB_SEED: "${DB_SEED:-false}"
+    volumes:
+      - app-storage:/var/www/html/storage/app/public
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - lms-network
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "1.0"
+
+  #------------------------------------------------------------
+  # Database: MySQL 8
+  #------------------------------------------------------------
+  db:
+    image: mysql:8.0
+    container_name: lms-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-rootsecret}"
+      MYSQL_DATABASE: "${DB_DATABASE:-lms_tubes}"
+      MYSQL_USER: "${DB_USERNAME:-lms_user}"
+      MYSQL_PASSWORD: "${DB_PASSWORD:-secret}"
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/custom.cnf:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-rootsecret}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - lms-network
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "1.0"
+
+  #------------------------------------------------------------
+  # phpMyAdmin (opsional, untuk development/debug)
+  # Jalankan: docker compose --profile debug up -d
+  #------------------------------------------------------------
+  phpmyadmin:
+    image: phpmyadmin:5
+    container_name: lms-phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "${PMA_PORT:-8888}:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-rootsecret}"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - lms-network
+    profiles:
+      - debug
+
+volumes:
+  db-data:
+    driver: local
+  app-storage:
+    driver: local
+
+networks:
+  lms-network:
+    driver: bridge
